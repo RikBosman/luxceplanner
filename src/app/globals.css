@@ -1,0 +1,67 @@
+@import "tailwindcss";
+
+@theme {
+  --font-sans: "Inter", ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  --font-serif: "Iowan Old Style", "Palatino Linotype", Palatino, "Book Antiqua", Georgia, serif;
+
+  /* Warme neutrale basis */
+  --color-sand-50: #fbf9f6;
+  --color-sand-100: #f5f1eb;
+  --color-sand-200: #ebe4d9;
+  --color-sand-300: #dccfbe;
+  --color-sand-400: #c2b19b;
+  --color-sand-500: #a08d76;
+  --color-sand-600: #7d6c58;
+  --color-sand-700: #5e5143;
+  --color-sand-800: #3f372e;
+  --color-sand-900: #2a251f;
+
+  /* Aardse groene accenten */
+  --color-moss-50: #f2f5ef;
+  --color-moss-100: #e1e9da;
+  --color-moss-200: #c4d4b7;
+  --color-moss-300: #a0b98c;
+  --color-moss-400: #7d9c67;
+  --color-moss-500: #5f7f4b;
+  --color-moss-600: #4a663a;
+  --color-moss-700: #3b512f;
+  --color-moss-800: #2f4027;
+  --color-moss-900: #263420;
+
+  --color-clay-500: #b5654a;
+  --color-clay-600: #9a523a;
+}
+
+@layer base {
+  html {
+    -webkit-text-size-adjust: 100%;
+    text-rendering: optimizeLegibility;
+  }
+  body {
+    @apply bg-sand-50 text-sand-900 antialiased;
+  }
+  :focus-visible {
+    outline: 3px solid var(--color-moss-500);
+    outline-offset: 2px;
+    border-radius: 4px;
+  }
+  h1, h2, h3 {
+    text-wrap: balance;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+      animation-duration: 0.01ms !important;
+      transition-duration: 0.01ms !important;
+    }
+  }
+}
+
+@utility container-page {
+  width: 100%;
+  max-width: 72rem;
+  margin-inline: auto;
+  padding-inline: 1rem;
+  @media (width >= 40rem) {
+    padding-inline: 1.5rem;
+  }
+}
