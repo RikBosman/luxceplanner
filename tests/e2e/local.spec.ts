@@ -18,7 +18,7 @@ test.describe("lokale modus (zonder Supabase)", () => {
     await expect(page.getByTestId("save-status")).toHaveAttribute("data-status", "saved", { timeout: 10_000 });
 
     await page.goto("/app");
-    await expect(page.getByText(/^Lokaal plan · \d+ ontwerpen?$/)).toBeVisible();
+    await expect(page.getByText(/^Lokaal plan · \d+ ontwerp(en)?$/)).toBeVisible();
     const card = page.getByRole("listitem").filter({ has: page.getByRole("heading", { name: "Lokale kamer", exact: true }) });
     await card.getByRole("button", { name: "Dupliceren" }).click();
     await expect(page.getByRole("heading", { name: "Lokale kamer (kopie)" })).toBeVisible();

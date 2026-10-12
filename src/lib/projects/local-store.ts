@@ -45,7 +45,17 @@ async function persist(data: LocalData): Promise<void> {
   await mkdir(path.dirname(file), { recursive: true });
   const tmp = `${file}.${process.pid}.tmp`;
   await writeFile(tmp, JSON.stringify(data, null, 2), "utf8");
-  await rename(tmp, file);
+  // Op Windows kan een virusscanner of indexering het bestand heel even vasthouden; dan kort opnieuw proberen.
+  for (let attempt = 0; ; attempt++) {
+    try {
+      await rename(tmp, file);
+      return;
+    } catch (e) {
+      const code = (e as NodeJS.ErrnoException).code;
+      if (attempt >= 5 || (code !== "EPERM" && code !== "EBUSY" && code !== "EACCES")) throw e;
+      await new Promise((r) => setTimeout(r, 50 * (attempt + 1)));
+    }
+  }
 }
 
 const now = () => new Date().toISOString();
