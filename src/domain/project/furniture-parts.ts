@@ -33,6 +33,10 @@ export const PART_COLORS = {
   steel: "#c3c7c9",
   cooktop: "#1b1a19",
   porcelain: "#f7f6f3",
+  ceramic: "#8d8478",
+  shadeGlow: "#e8d5b0",
+  branch: "#7a5a3c",
+  canvas: "#efe9df",
 } as const;
 
 const BOOK_COLORS = ["#3d2f25", "#8a6a3b", "#c9b79c", "#2f3a36", "#9b4a37", "#e6dccb", "#5c5146", "#1f2a33", "#b9975b"];
@@ -231,6 +235,115 @@ function vanity(w: number, d: number, h: number): LocalBox[] {
   ];
 }
 
+/** Lage loungebank zoals een daybed: houten plint, dikke zitkussens, rugkussens en linnen sierkussens. */
+function loungeSofa(w: number, d: number, h: number): LocalBox[] {
+  const plinth = 110;
+  const seatTop = Math.min(430, h * 0.6);
+  const back = Math.min(260, d * 0.24);
+  const n = Math.max(1, Math.round(w / 1100));
+  const gap = 16;
+  const cw = (w - (n - 1) * gap) / n;
+  const parts: LocalBox[] = [
+    box(-w / 2 + 60, w / 2 - 60, 0, plinth, -d / 2 + 40, d / 2 - 60, { color: PART_COLORS.oak, shade: 0.7 }),
+    box(-w / 2, w / 2, plinth, seatTop - 150, -d / 2, d / 2, { shade: 0.86 }),
+    box(-w / 2, w / 2, plinth, h - 120, -d / 2, -d / 2 + back * 0.6, { shade: 0.9 }),
+  ];
+  for (let i = 0; i < n; i++) {
+    const x0 = -w / 2 + i * (cw + gap);
+    parts.push(box(x0, x0 + cw, seatTop - 150, seatTop, -d / 2 + back * 0.6, d / 2, { shade: 1.06 }));
+    parts.push(box(x0 + 20, x0 + cw - 20, seatTop, h, -d / 2 + 10, -d / 2 + back, { shade: 0.97 }));
+  }
+  // Sierkussens: linnen, gestreept (goud) en grijs
+  const pillows: [number, number, string][] = [
+    [-w / 2 + 120, 520, PART_COLORS.linen],
+    [-w * 0.12, 500, PART_COLORS.throw],
+    [w * 0.06, 520, PART_COLORS.pillow],
+    [w / 2 - 640, 520, "#d9d6d0"],
+  ];
+  for (const [x0, pw, color] of pillows) {
+    if (x0 + pw > w / 2 - 20) continue;
+    parts.push(box(x0, x0 + pw, seatTop, Math.min(seatTop + 420, h), -d / 2 + back, -d / 2 + back + 140, { color }));
+  }
+  return parts;
+}
+
+/** Rond lijkend blad (achthoek-benadering met twee kruisende blokken). */
+function roundSlab(w: number, d: number, y0: number, y1: number, extra: Partial<LocalBox> = {}): LocalBox[] {
+  const k = 0.72;
+  return [box((-w / 2) * k, (w / 2) * k, y0, y1, -d / 2, d / 2, extra), box(-w / 2, w / 2, y0, y1, (-d / 2) * k, (d / 2) * k, extra)];
+}
+
+function sideTable(w: number, d: number, h: number): LocalBox[] {
+  const top = 30;
+  return [
+    ...roundSlab(w, d, h - top, h),
+    box(-w * 0.3 - 15, -w * 0.3 + 15, 0, h - top, -15, 15, { shade: 0.8 }),
+    box(w * 0.3 - 15, w * 0.3 + 15, 0, h - top, -15, 15, { shade: 0.8 }),
+    box(-15, 15, 0, h - top, d * 0.3 - 15, d * 0.3 + 15, { shade: 0.8 }),
+  ];
+}
+
+function floorLamp(w: number, d: number, h: number): LocalBox[] {
+  const shadeH = Math.min(300, h * 0.2);
+  return [
+    ...roundSlab(w * 0.75, d * 0.75, 0, 30, { color: PART_COLORS.blackMetal }),
+    box(-12, 12, 30, h - shadeH + 40, -12, 12, { color: PART_COLORS.brass }),
+    ...roundSlab(w * 0.82, d * 0.82, h - shadeH, h),
+    // Warm licht onder de kap
+    ...roundSlab(w * 0.7, d * 0.7, h - shadeH - 8, h - shadeH, { color: PART_COLORS.shadeGlow }),
+  ];
+}
+
+function vase(w: number, d: number, h: number): LocalBox[] {
+  const vaseH = Math.min(520, h * 0.42);
+  // Bolle vaas: smalle voet, brede buik, smalle hals
+  const parts: LocalBox[] = [
+    ...roundSlab(w * 0.55, d * 0.55, 0, vaseH * 0.12),
+    ...roundSlab(w * 0.82, d * 0.82, vaseH * 0.12, vaseH * 0.72),
+    ...roundSlab(w * 0.62, d * 0.62, vaseH * 0.72, vaseH * 0.88),
+    ...roundSlab(w * 0.42, d * 0.42, vaseH * 0.88, vaseH),
+  ];
+  // Gedroogde takken: dunne, iets uitwaaierende stelen met kleine knoppen
+  const rnd = seeded(Math.round(w * 13 + h));
+  for (let i = 0; i < 14; i++) {
+    const spread = 0.35 + rnd() * 0.6;
+    const x = (rnd() - 0.5) * w * spread;
+    const z = (rnd() - 0.5) * d * spread;
+    const top = vaseH + (h - vaseH) * (0.45 + rnd() * 0.55);
+    parts.push(box(x - 4, x + 4, vaseH - 30, top, z - 4, z + 4, { color: PART_COLORS.branch }));
+    if (i % 2 === 0) parts.push(box(x - 11, x + 11, top - 22, top, z - 11, z + 11, { color: i % 4 === 0 ? "#c0703a" : PART_COLORS.throw }));
+  }
+  return parts;
+}
+
+/** Kunstwerk aan de muur: lijst in ivoor, doek in de basiskleur met een lichter figuratief vlak. */
+function art(w: number, d: number, h: number): LocalBox[] {
+  const border = Math.min(70, w * 0.06);
+  return [
+    box(-w / 2, w / 2, 0, h, -d / 2, d / 2 - 12, { color: PART_COLORS.canvas }),
+    box(-w / 2 + border, w / 2 - border, border, h - border, d / 2 - 12, d / 2 - 4),
+    box(-w * 0.22, w * 0.22, h * 0.12, h * 0.62, d / 2 - 4, d / 2, { color: "#d9d1c3" }),
+    box(-w * 0.1, w * 0.1, h * 0.62, h * 0.8, d / 2 - 4, d / 2, { color: "#8a7a68" }),
+  ];
+}
+
+/** Gordijn met plooien en een zwarte roede. */
+function curtain(w: number, d: number, h: number): LocalBox[] {
+  const n = Math.max(3, Math.round(w / 110));
+  const pw = w / n;
+  const parts: LocalBox[] = [box(-w / 2, w / 2, h - 30, h, -d / 2, -d / 2 + 30, { color: PART_COLORS.blackMetal })];
+  for (let i = 0; i < n; i++) {
+    const x0 = -w / 2 + i * pw;
+    const deep = i % 2 === 0;
+    parts.push(box(x0, x0 + pw, 10, h - 30, -d / 2, deep ? d / 2 : d / 2 - d * 0.45, { shade: deep ? 1.02 : 0.9 }));
+  }
+  return parts;
+}
+
+function rug(w: number, d: number, h: number): LocalBox[] {
+  return [box(-w / 2, w / 2, 0, h * 0.6, -d / 2, d / 2, { shade: 0.85 }), box(-w / 2 + 60, w / 2 - 60, h * 0.6, h, -d / 2 + 60, d / 2 - 60)];
+}
+
 export function furnitureParts(kind: string, w: number, d: number, h: number): LocalBox[] {
   switch (kind) {
     case "sofa":
@@ -253,6 +366,20 @@ export function furnitureParts(kind: string, w: number, d: number, h: number): L
       return kitchen(w, d, h);
     case "vanity":
       return vanity(w, d, h);
+    case "lounge-sofa":
+      return loungeSofa(w, d, h);
+    case "side-table":
+      return sideTable(w, d, h);
+    case "floor-lamp":
+      return floorLamp(w, d, h);
+    case "vase":
+      return vase(w, d, h);
+    case "art":
+      return art(w, d, h);
+    case "curtain":
+      return curtain(w, d, h);
+    case "rug":
+      return rug(w, d, h);
     default:
       return [box(-w / 2, w / 2, 0, h, -d / 2, d / 2)];
   }

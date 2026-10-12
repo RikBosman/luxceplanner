@@ -12,6 +12,7 @@ const CATEGORY_LABELS: Record<string, string> = {
   werkkamer: "Werkkamer",
   keuken: "Keuken",
   badkamer: "Badkamer",
+  decoratie: "Decoratie",
 };
 
 export function LibraryPanel({ editor, viewCenter }: { editor: EditorApi; viewCenter: () => Point }) {

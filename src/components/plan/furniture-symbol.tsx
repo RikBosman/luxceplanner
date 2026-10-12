@@ -29,6 +29,50 @@ export function furnitureSymbol(kind: string, w: number, d: number) {
         </g>
       );
     }
+    case "lounge-sofa": {
+      const back = d * 0.22;
+      return (
+        <g>
+          {base}
+          <rect x={-hw} y={-hd} width={w} height={back} fill="#efe9df" stroke={stroke} strokeWidth={sw * 0.8} />
+          {Array.from({ length: Math.max(1, Math.round(w / 1100)) - 1 }, (_, i) => {
+            const x = -hw + (w * (i + 1)) / Math.max(1, Math.round(w / 1100));
+            return line(x, -hd + back, x, hd, `l${i}`);
+          })}
+        </g>
+      );
+    }
+    case "side-table":
+    case "vase":
+      return (
+        <g>
+          <ellipse cx={0} cy={0} rx={hw} ry={hd} fill={fill} stroke={stroke} strokeWidth={sw} />
+          {kind === "vase" && <ellipse cx={0} cy={0} rx={hw * 0.45} ry={hd * 0.45} fill="none" stroke={stroke} strokeWidth={sw * 0.7} />}
+        </g>
+      );
+    case "floor-lamp":
+      return (
+        <g>
+          <circle cx={0} cy={0} r={Math.min(hw, hd)} fill="#fbf6ea" stroke={stroke} strokeWidth={sw} />
+          {line(-hw * 0.6, -hd * 0.6, hw * 0.6, hd * 0.6, "a")}
+          {line(-hw * 0.6, hd * 0.6, hw * 0.6, -hd * 0.6, "b")}
+        </g>
+      );
+    case "art":
+      return <rect x={-hw} y={-hd} width={w} height={d} fill="#5a564c" stroke={stroke} strokeWidth={sw * 0.6} />;
+    case "curtain": {
+      const n = Math.max(3, Math.round(w / 110));
+      const step = w / n;
+      const path = Array.from({ length: n }, (_, i) => `Q ${-hw + step * (i + 0.5)} ${i % 2 ? -hd : hd} ${-hw + step * (i + 1)} 0`).join(" ");
+      return <path d={`M ${-hw} 0 ${path}`} fill="none" stroke={stroke} strokeWidth={sw * 1.2} />;
+    }
+    case "rug":
+      return (
+        <g>
+          <rect x={-hw} y={-hd} width={w} height={d} fill="#efe6d8" stroke={stroke} strokeWidth={sw * 0.6} strokeDasharray={`${sw * 4} ${sw * 3}`} />
+          <rect x={-hw + 60} y={-hd + 60} width={w - 120} height={d - 120} fill="none" stroke={stroke} strokeWidth={sw * 0.4} />
+        </g>
+      );
     case "bed":
       return (
         <g>

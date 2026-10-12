@@ -102,6 +102,6 @@ export function createFurniture(catalogId: string, position: Point, rotation = 0
     width: item.width,
     depth: item.depth,
     height: item.height,
-    elevation: 0,
+    elevation: item.elevation ?? 0,
   };
 }

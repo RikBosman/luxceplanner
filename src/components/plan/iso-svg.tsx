@@ -149,7 +149,8 @@ export function IsoSvg({ floor, materials, className, title }: { floor: Floor; m
   const furniture = floor.furniture
     .map((f) => ({ f, parts: scene.boxes.filter((b) => b.sourceId === f.id) }))
     .filter((x) => x.parts.length > 0)
-    .sort((a, b) => a.f.position.x + a.f.position.y - (b.f.position.x + b.f.position.y));
+    // Platte items (vloerkleed) altijd eerst, daarna op diepte.
+    .sort((a, b) => Number(b.f.height + b.f.elevation <= 30) - Number(a.f.height + a.f.elevation <= 30) || a.f.position.x + a.f.position.y - (b.f.position.x + b.f.position.y));
 
   // Vloeren met planken (lijnen langs x, om de 180 mm), geknipt op de kamer.
   const floors = floor.rooms.map((r) => {
@@ -166,7 +167,9 @@ export function IsoSvg({ floor, materials, className, title }: { floor: Floor; m
   });
 
   // Zachte schaduwen onder meubels.
-  const shadows = floor.furniture.map((f) => ({
+  const shadows = floor.furniture
+    .filter((f) => f.elevation === 0 && f.height > 30 && f.kind !== "curtain")
+    .map((f) => ({
     id: f.id,
     points: pts(rectangleCorners({ x: f.position.x + 40, y: f.position.y + 60 }, f.width + 60, f.depth + 60, f.rotation).map((c) => project(c, 0))),
   }));
