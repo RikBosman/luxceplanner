@@ -1,0 +1,284 @@
+{
+  "schemaVersion": 1,
+  "units": "mm",
+  "settings": {
+    "gridSize": 100,
+    "snapToGrid": true,
+    "defaultWallHeight": 2600,
+    "defaultWallThickness": 100
+  },
+  "materials": [
+    {
+      "id": "mat_wall",
+      "name": "Kalkwit",
+      "color": "#f3efe7"
+    },
+    {
+      "id": "mat_floor",
+      "name": "Eiken visgraat",
+      "color": "#c9a679"
+    }
+  ],
+  "floors": [
+    {
+      "id": "floor_1",
+      "name": "Begane grond",
+      "elevation": 0,
+      "walls": [
+        {
+          "id": "wall_1",
+          "start": {
+            "x": -50,
+            "y": -50
+          },
+          "end": {
+            "x": 6050,
+            "y": -50
+          },
+          "thickness": 100,
+          "height": 2600,
+          "materialId": "mat_wall"
+        },
+        {
+          "id": "wall_2",
+          "start": {
+            "x": 6050,
+            "y": -50
+          },
+          "end": {
+            "x": 6050,
+            "y": 4250
+          },
+          "thickness": 100,
+          "height": 2600,
+          "materialId": "mat_wall"
+        },
+        {
+          "id": "wall_3",
+          "start": {
+            "x": 6050,
+            "y": 4250
+          },
+          "end": {
+            "x": -50,
+            "y": 4250
+          },
+          "thickness": 100,
+          "height": 2600,
+          "materialId": "mat_wall"
+        },
+        {
+          "id": "wall_4",
+          "start": {
+            "x": -50,
+            "y": 4250
+          },
+          "end": {
+            "x": -50,
+            "y": -50
+          },
+          "thickness": 100,
+          "height": 2600,
+          "materialId": "mat_wall"
+        }
+      ],
+      "rooms": [
+        {
+          "id": "room_1",
+          "name": "Woonkamer",
+          "polygon": [
+            {
+              "x": 0,
+              "y": 0
+            },
+            {
+              "x": 6000,
+              "y": 0
+            },
+            {
+              "x": 6000,
+              "y": 4200
+            },
+            {
+              "x": 0,
+              "y": 4200
+            }
+          ],
+          "floorMaterialId": "mat_floor"
+        }
+      ],
+      "openings": [
+        {
+          "id": "door_1",
+          "type": "door",
+          "wallId": "wall_4",
+          "offset": 3400,
+          "width": 930,
+          "height": 2115,
+          "sillHeight": 0,
+          "swing": "left",
+          "flipped": false
+        },
+        {
+          "id": "window_1",
+          "type": "window",
+          "wallId": "wall_1",
+          "offset": 1600,
+          "width": 1800,
+          "height": 1500,
+          "sillHeight": 700,
+          "swing": "left",
+          "flipped": false
+        },
+        {
+          "id": "window_2",
+          "type": "window",
+          "wallId": "wall_2",
+          "offset": 2150,
+          "width": 1600,
+          "height": 1500,
+          "sillHeight": 700,
+          "swing": "left",
+          "flipped": false
+        }
+      ],
+      "furniture": [
+        {
+          "id": "item_sofa",
+          "catalogId": "sofa-3",
+          "name": "Bank (3-zits)",
+          "kind": "sofa",
+          "position": {
+            "x": 1650,
+            "y": 3650
+          },
+          "rotation": 180,
+          "width": 2100,
+          "depth": 900,
+          "height": 850,
+          "elevation": 0
+        },
+        {
+          "id": "item_armchair",
+          "catalogId": "armchair",
+          "name": "Fauteuil",
+          "kind": "armchair",
+          "position": {
+            "x": 3300,
+            "y": 2600
+          },
+          "rotation": 90,
+          "width": 850,
+          "depth": 850,
+          "height": 850,
+          "elevation": 0
+        },
+        {
+          "id": "item_coffee",
+          "catalogId": "coffee-table",
+          "name": "Salontafel",
+          "kind": "coffee-table",
+          "position": {
+            "x": 1650,
+            "y": 2550
+          },
+          "rotation": 0,
+          "width": 1100,
+          "depth": 600,
+          "height": 420,
+          "elevation": 0
+        },
+        {
+          "id": "item_books",
+          "catalogId": "bookcase",
+          "name": "Boekenkast",
+          "kind": "bookcase",
+          "position": {
+            "x": 1650,
+            "y": 200
+          },
+          "rotation": 0,
+          "width": 800,
+          "depth": 350,
+          "height": 2000,
+          "elevation": 0
+        },
+        {
+          "id": "item_table",
+          "catalogId": "dining-table",
+          "name": "Eettafel",
+          "kind": "dining-table",
+          "position": {
+            "x": 4700,
+            "y": 1300
+          },
+          "rotation": 90,
+          "width": 1800,
+          "depth": 900,
+          "height": 750,
+          "elevation": 0
+        },
+        {
+          "id": "item_chair_1",
+          "catalogId": "dining-chair",
+          "name": "Eetkamerstoel",
+          "kind": "chair",
+          "position": {
+            "x": 3900,
+            "y": 900
+          },
+          "rotation": 270,
+          "width": 450,
+          "depth": 520,
+          "height": 900,
+          "elevation": 0
+        },
+        {
+          "id": "item_chair_2",
+          "catalogId": "dining-chair",
+          "name": "Eetkamerstoel",
+          "kind": "chair",
+          "position": {
+            "x": 3900,
+            "y": 1700
+          },
+          "rotation": 270,
+          "width": 450,
+          "depth": 520,
+          "height": 900,
+          "elevation": 0
+        },
+        {
+          "id": "item_chair_3",
+          "catalogId": "dining-chair",
+          "name": "Eetkamerstoel",
+          "kind": "chair",
+          "position": {
+            "x": 5500,
+            "y": 900
+          },
+          "rotation": 90,
+          "width": 450,
+          "depth": 520,
+          "height": 900,
+          "elevation": 0
+        },
+        {
+          "id": "item_chair_4",
+          "catalogId": "dining-chair",
+          "name": "Eetkamerstoel",
+          "kind": "chair",
+          "position": {
+            "x": 5500,
+            "y": 1700
+          },
+          "rotation": 90,
+          "width": 450,
+          "depth": 520,
+          "height": 900,
+          "elevation": 0
+        }
+      ]
+    }
+  ]
+}

@@ -17,19 +17,20 @@ export const FEATURE_GROUPS: readonly { title: string; items: readonly { name: s
     title: "2D-plattegrond",
     items: [
       { name: "Kamer op maat starten", text: "Vul breedte en lengte in en begin direct met een rechthoekige kamer.", status: "beschikbaar" },
-      { name: "Muren tekenen en bewerken", text: "Muren toevoegen, verplaatsen, op lengte zetten en verwijderen, met snappen aan raster en hoeken.", status: "in-ontwikkeling" },
-      { name: "Deuren en ramen", text: "Openingen in muren plaatsen, verschuiven en omdraaien.", status: "in-ontwikkeling" },
-      { name: "Meubels plaatsen", text: "Een startbibliotheek met 11 meubels die je verplaatst en draait.", status: "in-ontwikkeling" },
-      { name: "Ongedaan maken en opnieuw", text: "Elke stap terug of vooruit, ook met sneltoetsen.", status: "in-ontwikkeling" },
-      { name: "Automatisch opslaan", text: "Wijzigingen worden opgeslagen; je ziet altijd de status.", status: "in-ontwikkeling" },
+      { name: "Muren tekenen en bewerken", text: "Muren toevoegen, verplaatsen, op lengte zetten en verwijderen, met snappen aan raster en hoeken.", status: "beschikbaar" },
+      { name: "Deuren en ramen", text: "Openingen in muren plaatsen, verschuiven en omdraaien.", status: "beschikbaar" },
+      { name: "Meubels plaatsen", text: "Een startbibliotheek met 11 meubels die je verplaatst, draait en op maat zet. Ze lijnen vanzelf uit tegen muren.", status: "beschikbaar" },
+      { name: "Ongedaan maken en opnieuw", text: "Elke stap terug of vooruit, ook met sneltoetsen.", status: "beschikbaar" },
+      { name: "Automatisch opslaan", text: "Wijzigingen worden opgeslagen; je ziet altijd de status.", status: "beschikbaar" },
     ],
   },
   {
     title: "3D-weergave",
     items: [
-      { name: "Interactief 3D-model", text: "Muren, vloer, deuren, ramen en meubels ruimtelijk bekijken en eromheen draaien.", status: "gepland" },
-      { name: "Kleuren en materialen", text: "Basiskleuren voor muren, vloeren en meubels.", status: "gepland" },
+      { name: "Interactief 3D-model", text: "Muren, vloer, deuren, ramen en meubels ruimtelijk bekijken en eromheen draaien.", status: "beschikbaar" },
+      { name: "Kleuren en materialen", text: "Kies een kleur voor muren en vloeren; meubels hebben een eigen standaardkleur.", status: "beschikbaar" },
       { name: "Rondwandelen en fotorealistische beelden", text: "Voor een latere fase.", status: "gepland" },
+      { name: "Ontwerpen op telefoon en tablet", text: "Bekijken werkt; tekenen is nu bedoeld voor laptop en desktop.", status: "in-ontwikkeling" },
     ],
   },
   {

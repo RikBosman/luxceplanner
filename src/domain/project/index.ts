@@ -9,3 +9,6 @@ export * from "./history";
 export { createId } from "./ids";
 export * from "./samples";
 export * from "./bounds";
+export * from "./commands";
+export * from "./snapping";
+export * from "./scene";
