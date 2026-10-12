@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { IsoSvg } from "@/components/plan/iso-svg";
+import { SampleRenderImage } from "@/components/plan/sample-render-image";
 import { PlanSvg } from "@/components/plan/plan-svg";
 import { CtaBand, Eyebrow } from "@/components/marketing/sections";
 import { ButtonLink } from "@/components/ui/button";
@@ -52,7 +52,7 @@ export default function HomePage() {
           <figure className="relative">
             <div className="rounded-[28px] border border-gold-400/25 bg-ink-900/80 p-3 shadow-[0_40px_120px_-40px_rgba(207,163,74,0.35)]">
               <div className="overflow-hidden rounded-[20px] bg-sand-100">
-                <IsoSvg floor={floor} materials={hero.document.materials} className="aspect-[4/3] w-full" title={`3D-voorvertoning: ${hero.title}`} />
+                <SampleRenderImage sample={hero} priority className="aspect-[16/10]" />
               </div>
               <div className="mt-3 grid grid-cols-[1fr_auto] items-center gap-4 rounded-[18px] bg-ink-950 p-3">
                 <div className="flex items-center gap-3">
@@ -68,7 +68,7 @@ export default function HomePage() {
               </div>
             </div>
             <figcaption className="mt-4 text-center text-xs text-ivory/45">
-              Voorbeeldontwerp: beide weergaven worden berekend uit één en hetzelfde projectbestand.
+              Fotorealistische render van een voorbeeldontwerp, gemaakt met de renderer uit de studio op basis van hetzelfde projectbestand als de plattegrond.
             </figcaption>
           </figure>
         </div>
@@ -112,7 +112,7 @@ export default function HomePage() {
           <ul className="mt-10 grid gap-6 md:grid-cols-3">
             {SAMPLE_DESIGNS.map((d) => (
               <li key={d.slug} className="overflow-hidden rounded-2xl border border-gold-400/20 bg-ink-900">
-                <IsoSvg floor={d.document.floors[0]!} materials={d.document.materials} className="aspect-[4/3] w-full bg-sand-100" title={d.title} />
+                <SampleRenderImage sample={d} className="aspect-[16/10]" sizes="(min-width: 768px) 33vw, 100vw" />
                 <div className="p-5">
                   <h3 className="font-serif text-xl font-medium text-ivory">{d.title}</h3>
                   <p className="mt-1 text-sm text-ivory/60">{d.description}</p>

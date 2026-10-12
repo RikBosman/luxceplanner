@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { CtaBand, PageHero } from "@/components/marketing/sections";
-import { IsoSvg } from "@/components/plan/iso-svg";
+import { SampleRenderImage } from "@/components/plan/sample-render-image";
 import { PlanSvg } from "@/components/plan/plan-svg";
 import { SAMPLE_DESIGNS } from "@/domain/project";
 
@@ -38,8 +38,8 @@ export default function HowItWorksPage() {
         </ol>
         <figure className="space-y-3 rounded-3xl border border-sand-200 bg-white p-5">
           <PlanSvg floor={floor} materials={sample.document.materials} className="aspect-[4/3] w-full" title={`Plattegrond: ${sample.title}`} />
-          <IsoSvg floor={floor} materials={sample.document.materials} className="aspect-[4/3] w-full" title={`3D-voorvertoning: ${sample.title}`} />
-          <figcaption className="text-center text-xs text-sand-500">Voorbeeld: dezelfde slaapkamer als plattegrond en als 3D-voorvertoning.</figcaption>
+          <div className="overflow-hidden rounded-2xl"><SampleRenderImage sample={sample} className="aspect-[16/10]" /></div>
+          <figcaption className="text-center text-xs text-sand-500">Voorbeeld: dezelfde slaapkamer als plattegrond en als fotorealistische 3D-render.</figcaption>
         </figure>
       </div>
       <CtaBand />

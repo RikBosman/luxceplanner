@@ -171,8 +171,8 @@ test.describe("2D-editor en 3D", () => {
     const view = page.getByTestId("view-3d");
     await expect(view).toBeVisible();
     await expect(view.locator("canvas")).toBeVisible();
-    const boxesBefore = Number(await view.getAttribute("data-boxes"));
-    expect(boxesBefore).toBe(4 + partCount("bed-double")); // 4 muren + alle onderdelen van het bed
+    const partsBefore = Number(await view.getAttribute("data-furniture-parts"));
+    expect(partsBefore).toBe(partCount("bed-double")); // alle onderdelen van het bed
 
     await page.getByRole("button", { name: /Muren: kleur #dfe6d6/ }).click();
     await expect(page.getByRole("button", { name: /Muren: kleur #dfe6d6/ })).toHaveAttribute("aria-pressed", "true");
@@ -181,7 +181,7 @@ test.describe("2D-editor en 3D", () => {
     await page.getByRole("button", { name: "2D", exact: true }).click();
     await page.getByRole("button", { name: "Bureau" }).click();
     await page.getByRole("button", { name: "3D", exact: true }).click();
-    await expect(page.getByTestId("view-3d")).toHaveAttribute("data-boxes", String(boxesBefore + partCount("desk")));
+    await expect(page.getByTestId("view-3d")).toHaveAttribute("data-furniture-parts", String(partsBefore + partCount("desk")));
     await saved(page);
   });
 });

@@ -1,14 +1,16 @@
 "use client";
 
-import { Canvas, useFrame, useThree } from "@react-three/fiber";
-import { Component, useEffect, useMemo, useRef, useState, type ReactNode } from "react";
+import { Canvas, useThree } from "@react-three/fiber";
+import { Component, useEffect, useMemo, useState, type ReactNode } from "react";
 import * as THREE from "three";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls.js";
 import { buildScene, setFloorColor, setWallColor, type Scene3D } from "@/domain/project";
+import { RoomMeshes, StudioLighting } from "@/components/three/room-meshes";
+import { PhotoDialog } from "./photo-dialog";
 import type { EditorApi } from "./use-editor-state";
 
-const WALL_SWATCHES = ["#f3efe7", "#e9e2d6", "#dfe6d6", "#d9e1e6", "#efd9c9", "#c9c2b6"];
-const FLOOR_SWATCHES = ["#c9a679", "#d8bf98", "#a07c56", "#bdb5a8", "#8f8a82", "#e8e1d3"];
+const WALL_SWATCHES = ["#f3efe7", "#e9e2d6", "#a39789", "#8c8073", "#dfe6d6", "#c9c2b6"];
+const FLOOR_SWATCHES = ["#c9a679", "#d8bf98", "#a07c56", "#4f4239", "#8f8a82", "#e8e1d3"];
 
 type ViewPreset = "schuin" | "boven" | "laag";
 
@@ -38,12 +40,13 @@ class SceneErrorBoundary extends Component<{ children: ReactNode }, { failed: bo
   }
 }
 
-export function View3D({ editor }: { editor: EditorApi }) {
+export function View3D({ editor, projectName = "ontwerp" }: { editor: EditorApi; projectName?: string }) {
   const doc = editor.committed;
   const floor = doc.floors[0]!;
   const scene = useMemo(() => buildScene(floor, doc.materials), [floor, doc.materials]);
   const [preset, setPreset] = useState<{ name: ViewPreset; n: number }>({ name: "schuin", n: 0 });
   const [cutaway, setCutaway] = useState(true);
+  const [photoOpen, setPhotoOpen] = useState(false);
   const [supported] = useState(() => (typeof document === "undefined" ? true : webglAvailable()));
 
   if (!supported) {
@@ -61,14 +64,12 @@ export function View3D({ editor }: { editor: EditorApi }) {
   const floorColor = doc.materials.find((m) => m.id === floor.rooms[0]?.floorMaterialId)?.color ?? "#d9c7a7";
 
   return (
-    <div className="relative h-full" data-testid="view-3d" data-boxes={scene.boxes.length}>
+    <div className="relative h-full" data-testid="view-3d" data-furniture-parts={scene.boxes.filter((b) => b.kind === "furniture").length}>
       <SceneErrorBoundary>
-        <Canvas frameloop="demand" dpr={[1, 2]} camera={{ fov: 45, near: 0.05, far: 500 }} gl={{ antialias: true, preserveDrawingBuffer: true }}>
+        <Canvas shadows frameloop="demand" dpr={[1, 2]} scene={{ environmentIntensity: 0.35 }} camera={{ fov: 45, near: 0.05, far: 500 }} gl={{ antialias: true, preserveDrawingBuffer: true }}>
           <color attach="background" args={["#f4f1ec"]} />
-          <hemisphereLight args={["#ffffff", "#c9bba6", 1.1]} />
-          <directionalLight position={[8, 14, 6]} intensity={1.3} />
-          <directionalLight position={[-6, 8, -10]} intensity={0.35} />
-          <SceneContent scene={scene} cutaway={cutaway} />
+          <StudioLighting scene={scene} />
+          <RoomMeshes scene={scene} cutaway={cutaway} />
           <Controls scene={scene} preset={preset} />
         </Canvas>
       </SceneErrorBoundary>
@@ -83,6 +84,9 @@ export function View3D({ editor }: { editor: EditorApi }) {
           <input type="checkbox" checked={cutaway} onChange={(e) => setCutaway(e.target.checked)} className="accent-gold-600" />
           Voorste muren verlagen
         </label>
+        <button type="button" onClick={() => setPhotoOpen(true)} className="ml-1 rounded-md bg-gold-400 px-3 py-1 text-xs font-medium text-ink-950 hover:bg-gold-300">
+          ✦ Fotorealistische render
+        </button>
       </div>
 
       <div className="absolute right-3 top-3 w-56 space-y-3 rounded-xl bg-white/95 p-3 text-xs shadow-sm">
@@ -95,6 +99,7 @@ export function View3D({ editor }: { editor: EditorApi }) {
           {scene.warnings.slice(0, 3).map((w) => <p key={w}>{w}</p>)}
         </div>
       )}
+      {photoOpen && <PhotoDialog doc={doc} projectName={projectName} onClose={() => setPhotoOpen(false)} />}
       <p className="pointer-events-none absolute bottom-3 left-1/2 -translate-x-1/2 rounded-lg bg-white/90 px-3 py-1.5 text-xs text-sand-700 shadow-sm">
         Sleep om te draaien · scroll om te zoomen · rechtermuisknop om te verschuiven. Bewerken doe je in 2D.
       </p>
@@ -125,80 +130,6 @@ function ColorPicker({ label, value, swatches, onPick }: { label: string; value:
         </label>
       </div>
     </fieldset>
-  );
-}
-
-/** Hoogte (m) waarop muren aan de camerakant worden afgesneden, zodat je in de kamer kijkt. */
-const CUTAWAY_HEIGHT = 0.4;
-
-function SceneContent({ scene, cutaway }: { scene: Scene3D; cutaway: boolean }) {
-  const invalidate = useThree((s) => s.invalidate);
-  useEffect(() => invalidate(), [scene, cutaway, invalidate]);
-  const meshes = useRef<(THREE.Mesh | null)[]>([]);
-  const b = scene.bounds!;
-  const cx = (b.min[0] + b.max[0]) / 2;
-  const cz = (b.min[2] + b.max[2]) / 2;
-
-  // Poppenhuisweergave: muren tussen camera en het midden van de kamer worden verlaagd.
-  useFrame(({ camera }) => {
-    const camX = camera.position.x - cx;
-    const camZ = camera.position.z - cz;
-    const fromAbove = camera.position.y > Math.hypot(camX, camZ) * 2.5;
-    scene.boxes.forEach((box, i) => {
-      const mesh = meshes.current[i];
-      if (!mesh || box.kind === "furniture") return;
-      const [x, y, z] = box.center;
-      const bottom = y - box.size[1] / 2;
-      const front = cutaway && !fromAbove && (x - cx) * camX + (z - cz) * camZ > 0.05;
-      if (!front || bottom + box.size[1] <= CUTAWAY_HEIGHT) {
-        mesh.visible = true;
-        mesh.scale.y = 1;
-        mesh.position.y = y;
-      } else if (bottom >= CUTAWAY_HEIGHT) {
-        mesh.visible = false;
-      } else {
-        const h = CUTAWAY_HEIGHT - bottom;
-        mesh.visible = true;
-        mesh.scale.y = h / box.size[1];
-        mesh.position.y = bottom + h / 2;
-      }
-    });
-  });
-
-  return (
-    <group>
-      {scene.floors.map((f) => (
-        <FloorMesh key={f.id} polygon={f.polygon} color={f.color} />
-      ))}
-      {scene.boxes.map((box, i) => (
-        <mesh
-          key={`${box.sourceId}-${i}`}
-          ref={(m) => {
-            meshes.current[i] = m;
-          }}
-          position={box.center}
-          rotation={[0, box.rotationY, 0]}
-        >
-          <boxGeometry args={box.size} />
-          <meshStandardMaterial color={box.color} roughness={box.kind === "window-glass" ? 0.1 : 0.85} transparent={box.opacity !== undefined} opacity={box.opacity ?? 1} />
-        </mesh>
-      ))}
-    </group>
-  );
-}
-
-function FloorMesh({ polygon, color }: { polygon: [number, number][]; color: string }) {
-  const geometry = useMemo(() => {
-    const shape = new THREE.Shape(polygon.map(([x, z]) => new THREE.Vector2(x, z)));
-    const g = new THREE.ShapeGeometry(shape);
-    g.rotateX(Math.PI / 2); // (x, y) van de vorm → (x, 0, z) in de scène
-    return g;
-  }, [polygon]);
-  useEffect(() => () => geometry.dispose(), [geometry]);
-  return (
-    <mesh geometry={geometry} position={[0, 0.001, 0]}>
-      <meshStandardMaterial color={color} side={THREE.DoubleSide} roughness={0.9} />
-    </mesh>
   );
 }
 

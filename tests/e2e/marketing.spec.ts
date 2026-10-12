@@ -11,6 +11,7 @@ const pages = [
   ["/contact", /Contact/],
   ["/privacy", /Privacyverklaring/],
   ["/voorwaarden", /Gebruiksvoorwaarden/],
+  ["/licenties", /Licenties/],
   ["/inloggen", /Inloggen/],
   ["/registreren", /account/i],
   ["/wachtwoord-vergeten", /Wachtwoord vergeten/],
@@ -31,7 +32,7 @@ test.describe("marketingwebsite", () => {
   test("homepage leidt naar registreren en toont 2D- en 3D-voorbeeld", async ({ page }) => {
     await page.goto("/");
     await expect(page.getByRole("img", { name: /Plattegrond:/ }).first()).toBeVisible();
-    await expect(page.getByRole("img", { name: /3D-voorvertoning:/ }).first()).toBeVisible();
+    await expect(page.getByRole("img", { name: /3D-render:/ }).first()).toBeVisible();
     await page.getByRole("main").getByRole("link", { name: "Gratis beginnen" }).first().click();
     await expect(page).toHaveURL(/\/registreren$/);
   });

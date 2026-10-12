@@ -75,11 +75,24 @@ describe("3D-scène komt overeen met de projectdata", () => {
     expect(sill.size[1]).toBeCloseTo(0.8, 9);
     expect(sill.size[0]).toBeCloseTo(1.2, 9);
     const glass = scene.boxes.find((b) => b.kind === "window-glass")!;
-    expect(glass.size[1]).toBeCloseTo(1.4, 9);
+    expect(glass.size[1]).toBeCloseTo(1.4 - 0.09, 9); // binnen het kozijn (2 × 45 mm)
     expect(glass.center[1]).toBeCloseTo(0.8 + 0.7, 9);
     // Totale muurlengte blijft gelijk: segmenten + opening = 4200 mm
     const solidFull = segments.filter((s) => s.size[1] > 2.5).reduce((sum, s) => sum + s.size[0], 0);
     expect(solidFull + 1.2).toBeCloseTo(4.2, 9);
+  });
+
+  it("zet plinten en sierlijsten aan de binnenkant van de muren", () => {
+    const { doc } = room();
+    const scene = buildScene(doc.floors[0]!, doc.materials);
+    const trims = scene.boxes.filter((b) => b.kind === "trim");
+    expect(trims.length).toBeGreaterThanOrEqual(8); // per muur een plint en een sierlijst
+    // Bovenmuur: hartlijn op y = -50 mm, binnenkant op y = 0; de plint ligt daar net binnen.
+    const top = trims.filter((t) => Math.abs(t.center[2]) < 0.05 && t.center[1] < 0.1);
+    expect(top).toHaveLength(1);
+    expect(top[0]!.center[2]).toBeGreaterThan(0);
+    expect(top[0]!.center[2] - top[0]!.size[2] / 2).toBeCloseTo(0, 9);
+    expect(scene.ceilingHeight).toBeCloseTo(2.6, 9);
   });
 
   it("plaatst meubels op dezelfde positie, maat en draaiing als in 2D", () => {

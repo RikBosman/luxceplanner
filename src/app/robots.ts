@@ -3,7 +3,7 @@ import { siteConfig } from "@/config/site";
 
 export default function robots(): MetadataRoute.Robots {
   return {
-    rules: [{ userAgent: "*", allow: "/", disallow: ["/app", "/auth", "/wachtwoord-herstellen"] }],
+    rules: [{ userAgent: "*", allow: "/", disallow: ["/app", "/auth", "/wachtwoord-herstellen", "/render"] }],
     sitemap: `${siteConfig.url}/sitemap.xml`,
   };
 }

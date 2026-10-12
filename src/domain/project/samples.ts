@@ -77,6 +77,8 @@ export interface SampleDesign {
   title: string;
   description: string;
   document: ProjectDocument;
+  /** Camerastandpunt voor de fotorealistische render (meters: x, hoogte, z). */
+  camera?: { position: [number, number, number]; target: [number, number, number]; fov: number };
 }
 
 /** 6,0 × 4,2 m. Muur 1 = achter (boven), muur 4 = links. */
@@ -98,13 +100,15 @@ function livingRoom(): ProjectDocument {
       item("item_table_1", "side-table-round", 3200, 1550, { materialId: "mat_black", width: 700, depth: 700, height: 480 }),
       item("item_table_2", "side-table-round", 2650, 1750, { materialId: "mat_black", height: 400 }),
       item("item_vase", "vase-branches", 3250, 1500, { elevation: 480, width: 300, depth: 300, height: 1150 }),
-      item("item_armchair", "armchair", 1250, 2950, { rotation: 200, materialId: "mat_boucle" }),
+      item("item_armchair", "lounge-chair", 1250, 2950, { rotation: 200 }),
+      item("item_plant", "plant", 4400, 650),
+      item("item_plant_2", "plant", 330, 1500, { width: 560, depth: 525, height: 672 }),
       item("item_dining", "dining-table", 4800, 2950, { rotation: 90, materialId: "mat_walnut" }),
       item("item_chair_1", "dining-chair", 4250, 2550, { rotation: 270, materialId: "mat_linen" }),
       item("item_chair_2", "dining-chair", 4250, 3350, { rotation: 270, materialId: "mat_linen" }),
       item("item_chair_3", "dining-chair", 5350, 2550, { rotation: 90, materialId: "mat_linen" }),
       item("item_chair_4", "dining-chair", 5350, 3350, { rotation: 90, materialId: "mat_linen" }),
-      item("item_vase_2", "vase-branches", 4800, 2950, { elevation: 750, width: 260, depth: 260, height: 750 }),
+      item("item_vase_2", "vase-flowers", 4800, 2950, { elevation: 750 }),
     ],
   );
 }
@@ -126,7 +130,8 @@ function bedroom(): ProjectDocument {
       item("item_vase", "vase-branches", 700, 300, { elevation: 500, width: 220, depth: 220, height: 650 }),
       item("item_lamp", "floor-lamp", 2950, 300),
       item("item_wardrobe", "wardrobe", 300, 2500, { rotation: 270, materialId: "mat_smoked" }),
-      item("item_chair", "armchair", 2950, 2700, { rotation: 225, materialId: "mat_boucle" }),
+      item("item_chair", "lounge-chair", 2950, 2700, { rotation: 225 }),
+      item("item_plant", "plant", 330, 1400, { width: 560, depth: 525, height: 672 }),
     ],
   );
 }
@@ -148,7 +153,8 @@ function kitchen(): ProjectDocument {
       item("item_chair_2", "dining-chair", 2200, 1350, { materialId: "mat_linen" }),
       item("item_chair_3", "dining-chair", 1200, 2550, { rotation: 180, materialId: "mat_linen" }),
       item("item_chair_4", "dining-chair", 2200, 2550, { rotation: 180, materialId: "mat_linen" }),
-      item("item_vase", "vase-branches", 1700, 1950, { elevation: 750, width: 260, depth: 260, height: 800 }),
+      item("item_vase", "vase-flowers", 1700, 1950, { elevation: 750 }),
+      item("item_plant", "plant", 380, 2620),
       item("item_desk", "desk", 4300, 350, { materialId: "mat_walnut" }),
       item("item_lamp", "floor-lamp", 4950, 900),
       item("item_art", "wall-art", 20, 1950, { rotation: 270, materialId: "mat_art_rust", width: 900, height: 1100, elevation: 1050 }),
@@ -158,7 +164,25 @@ function kitchen(): ProjectDocument {
 }
 
 export const SAMPLE_DESIGNS: readonly SampleDesign[] = [
-  { slug: "woonkamer", title: "Warme lounge met eethoek", description: "6,0 × 4,2 m: cognac velours, bouclé, gerookt eiken en kunst aan de muur.", document: livingRoom() },
-  { slug: "slaapkamer", title: "Rustige slaapkamer", description: "3,6 × 3,4 m in taupe en linnen, met een wollen kleed en zachte verlichting.", document: bedroom() },
-  { slug: "keuken", title: "Keuken met eetplek", description: "5,2 × 3,0 m: gerookt eiken fronten, notenhouten tafel en een kleine werkhoek.", document: kitchen() },
+  {
+    slug: "woonkamer",
+    title: "Warme lounge met eethoek",
+    description: "6,0 × 4,2 m: cognac velours, bouclé, gerookt eiken en kunst aan de muur.",
+    document: livingRoom(),
+    camera: { position: [0.55, 1.4, 4.0], target: [3.1, 0.95, 0.6], fov: 62 },
+  },
+  {
+    slug: "slaapkamer",
+    title: "Rustige slaapkamer",
+    description: "3,6 × 3,4 m in taupe en linnen, met een wollen kleed en zachte verlichting.",
+    document: bedroom(),
+    camera: { position: [1.25, 1.5, 3.15], target: [2.1, 0.8, 0.7], fov: 64 },
+  },
+  {
+    slug: "keuken",
+    title: "Keuken met eetplek",
+    description: "5,2 × 3,0 m: gerookt eiken fronten, notenhouten tafel en een kleine werkhoek.",
+    document: kitchen(),
+    camera: { position: [4.9, 1.5, 2.8], target: [1.5, 1.0, 0.6], fov: 62 },
+  },
 ];

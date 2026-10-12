@@ -33,6 +33,17 @@ Eén product, twee gescheiden onderdelen:
 - Opgeslagen miniatuurafbeeldingen (miniaturen worden nu live uit de data getekend).
 - Analytics (bewust uit; geen cookiebanner nodig zolang dat zo blijft).
 
+## Fotorealistisch renderen en 3D-modellen
+
+- In de studio (3D-weergave) maakt de knop **Fotorealistische render** een foto-echt beeld op ooghoogte met path tracing (`three-gpu-pathtracer`): daglicht door de ramen, weerkaatsend licht, zachte schaduwen. Het rendert op de computer van de gebruiker; met een videokaart duurt een beeld seconden tot enkele minuten.
+- De beelden op de website (`public/renders/*.jpg`) zijn met dezelfde renderer gemaakt. Opnieuw maken na het aanpassen van voorbeelden of meubels:
+  ```bash
+  pnpm dev                      # in één terminal
+  pnpm render:samples           # in een tweede terminal (eenmalig eerst: pnpm exec playwright install chromium)
+  ```
+  Instelbaar met `RENDER_WIDTH`, `RENDER_HEIGHT` en `RENDER_SAMPLES` (standaard 1600 × 1000, 512 samples).
+- Realistische 3D-modellen staan in `public/models/` (glTF, opgeschoond en verkleind). Herkomst en licenties (CC0 / CC-BY 4.0) staan in `MODEL_CREDITS` in `src/domain/project/catalog.ts` en op de pagina `/licenties`. Een model toevoegen: zet het `.glb`-bestand in `public/models/` en voeg een catalogusitem met `model` toe; de standaardmaten moeten de maten van het model zijn. Zonder (werkend) model valt de app terug op de eigen parametrische vorm.
+
 ## Techniek
 
 Next.js 16 (App Router) · React 19 · TypeScript (strict) · Tailwind CSS 4 · Supabase (PostgreSQL + Auth) · Zod · eigen SVG-editor · Three.js via React Three Fiber · Vitest · Playwright · pnpm.

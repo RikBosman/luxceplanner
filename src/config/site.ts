@@ -42,6 +42,7 @@ export const footerNav = [
     links: [
       { href: "/privacy", label: "Privacyverklaring" },
       { href: "/voorwaarden", label: "Gebruiksvoorwaarden" },
+      { href: "/licenties", label: "Licenties" },
     ],
   },
 ] as const;

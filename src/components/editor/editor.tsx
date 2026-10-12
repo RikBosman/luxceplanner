@@ -319,7 +319,7 @@ export function Editor({
             {view === "2d" ? (
               viewport && <PlanCanvas editor={editor} viewport={viewport} onViewportChange={setViewport} size={size} />
             ) : (
-              <View3D editor={editor} />
+              <View3D editor={editor} projectName={projectName} />
             )}
           </div>
           {view === "2d" && (
