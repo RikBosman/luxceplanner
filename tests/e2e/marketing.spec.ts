@@ -1,4 +1,5 @@
 import { expect, test } from "@playwright/test";
+import { isLocal } from "./helpers";
 
 const pages = [
   ["/", /Ontwerp je woning/],
@@ -53,6 +54,7 @@ test.describe("marketingwebsite", () => {
   });
 
   test("beveiligde app stuurt niet-ingelogde bezoekers naar inloggen", async ({ page }) => {
+    test.skip(isLocal(), "In lokale modus is er geen inloggen");
     await page.goto("/app/projecten/00000000-0000-0000-0000-000000000000");
     await expect(page).toHaveURL(/\/inloggen\?volgende=/);
   });

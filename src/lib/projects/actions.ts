@@ -11,9 +11,9 @@ import {
   projectNameSchema,
   type ProjectDocument,
 } from "@/domain/project";
-import { getCurrentUser } from "@/lib/supabase/server";
-import { projectErrorMessage } from "./errors";
+import { isLocalMode } from "@/lib/mode";
 import { projectIdSchema } from "./repository";
+import { getStore, StoreFailure, type ProjectStore } from "./store";
 
 export interface ActionState {
   error?: string;
@@ -25,12 +25,14 @@ const str = (fd: FormData, key: string) => {
   return typeof v === "string" ? v : "";
 };
 
-async function requireUser() {
-  const { supabase, user } = await getCurrentUser();
-  if (!supabase || !user) redirect("/inloggen");
-  return { supabase, user };
+async function requireStore(): Promise<ProjectStore> {
+  const store = await getStore();
+  if (!store) redirect("/inloggen");
+  return store;
 }
 
+const GENERIC_ERROR = "Er ging iets mis bij het opslaan. Controleer je verbinding en probeer het opnieuw.";
+const messageOf = (e: unknown) => (e instanceof StoreFailure ? e.message : GENERIC_ERROR);
 export async function createProject(_prev: ActionState, fd: FormData): Promise<ActionState> {
   const fields: Record<string, string> = {};
   const name = projectNameSchema.safeParse(str(fd, "name"));
@@ -58,15 +60,15 @@ export async function createProject(_prev: ActionState, fd: FormData): Promise<A
     document.floors[0]!.rooms.push({ ...room, floorMaterialId: "mat_floor_oak" });
   }
 
-  const { supabase } = await requireUser();
-  const { data, error } = await supabase
-    .from("projects")
-    .insert({ name: name.data!, document, schema_version: document.schemaVersion })
-    .select("id")
-    .single();
-  if (error || !data) return { error: projectErrorMessage(error) };
+  const store = await requireStore();
+  let id: string;
+  try {
+    ({ id } = await store.create(name.data!, document));
+  } catch (e) {
+    return { error: messageOf(e) };
+  }
   revalidatePath("/app");
-  redirect(`/app/projecten/${data.id}`);
+  redirect(`/app/projecten/${id}`);
 }
 
 export async function renameProject(_prev: ActionState, fd: FormData): Promise<ActionState> {
@@ -74,10 +76,12 @@ export async function renameProject(_prev: ActionState, fd: FormData): Promise<A
   const name = projectNameSchema.safeParse(str(fd, "name"));
   if (!id.success) return { error: "Onbekend ontwerp." };
   if (!name.success) return { fields: { name: name.error.issues[0]!.message } };
-  const { supabase } = await requireUser();
-  const { data, error } = await supabase.from("projects").update({ name: name.data }).eq("id", id.data).select("id");
-  if (error) return { error: projectErrorMessage(error) };
-  if (!data?.length) return { error: projectErrorMessage({ message: "project_not_found" }) };
+  const store = await requireStore();
+  try {
+    await store.rename(id.data, name.data);
+  } catch (e) {
+    return { error: messageOf(e) };
+  }
   revalidatePath("/app");
   return {};
 }
@@ -85,12 +89,12 @@ export async function renameProject(_prev: ActionState, fd: FormData): Promise<A
 export async function duplicateProject(_prev: ActionState, fd: FormData): Promise<ActionState> {
   const id = projectIdSchema.safeParse(str(fd, "id"));
   if (!id.success) return { error: "Onbekend ontwerp." };
-  const { supabase } = await requireUser();
-  const { data: source, error: readError } = await supabase.from("projects").select("name, document, schema_version").eq("id", id.data).maybeSingle();
-  if (readError || !source) return { error: projectErrorMessage({ message: "project_not_found" }) };
-  const copyName = `${source.name} (kopie)`.slice(0, 120);
-  const { error } = await supabase.from("projects").insert({ name: copyName, document: source.document, schema_version: source.schema_version });
-  if (error) return { error: projectErrorMessage(error) };
+  const store = await requireStore();
+  try {
+    await store.duplicate(id.data);
+  } catch (e) {
+    return { error: messageOf(e) };
+  }
   revalidatePath("/app");
   return {};
 }
@@ -98,10 +102,12 @@ export async function duplicateProject(_prev: ActionState, fd: FormData): Promis
 export async function deleteProject(_prev: ActionState, fd: FormData): Promise<ActionState> {
   const id = projectIdSchema.safeParse(str(fd, "id"));
   if (!id.success) return { error: "Onbekend ontwerp." };
-  const { supabase } = await requireUser();
-  const { data, error } = await supabase.from("projects").delete().eq("id", id.data).select("id");
-  if (error) return { error: projectErrorMessage(error) };
-  if (!data?.length) return { error: projectErrorMessage({ message: "project_not_found" }) };
+  const store = await requireStore();
+  try {
+    await store.remove(id.data);
+  } catch (e) {
+    return { error: messageOf(e) };
+  }
   revalidatePath("/app");
   if (str(fd, "terug") === "1") redirect("/app");
   return {};
@@ -123,27 +129,31 @@ export async function saveProjectDocument(id: string, expectedRevision: number, 
   if (!parsed.success) {
     return { ok: false, reason: "invalid", message: "Het ontwerp bevat ongeldige gegevens en is niet opgeslagen." };
   }
-  const { supabase, user } = await getCurrentUser();
-  if (!supabase || !user) return { ok: false, reason: "unauthenticated", message: "Je sessie is verlopen. Log opnieuw in om op te slaan." };
-
-  const { data, error } = await supabase
-    .rpc("save_project_document", { p_id: id, p_expected_revision: expectedRevision, p_document: parsed.data })
-    .single<{ revision: number; updated_at: string }>();
-  if (error || !data) {
-    const msg = error?.message ?? "";
-    const reason = msg.includes("revision_conflict") ? "conflict" : msg.includes("project_not_found") ? "not_found" : "error";
-    return { ok: false, reason, message: projectErrorMessage(error) };
+  const store = await getStore();
+  if (!store) return { ok: false, reason: "unauthenticated", message: "Je sessie is verlopen. Log opnieuw in om op te slaan." };
+  try {
+    const r = await store.save(id, expectedRevision, parsed.data);
+    return { ok: true, revision: r.revision, updatedAt: r.updatedAt };
+  } catch (e) {
+    const code = e instanceof StoreFailure ? e.code : "error";
+    const reason = code === "conflict" ? "conflict" : code === "not_found" ? "not_found" : code === "invalid" ? "invalid" : "error";
+    return { ok: false, reason, message: messageOf(e) };
   }
-  return { ok: true, revision: data.revision, updatedAt: data.updated_at };
 }
 
 export async function deleteAccount(_prev: ActionState, fd: FormData): Promise<ActionState> {
   if (str(fd, "bevestiging").trim().toUpperCase() !== "VERWIJDER") {
     return { fields: { bevestiging: "Typ VERWIJDER om te bevestigen." } };
   }
-  const { supabase } = await requireUser();
-  const { error } = await supabase.rpc("delete_own_account");
-  if (error) return { error: "Je account kon niet worden verwijderd. Probeer het later opnieuw of neem contact op." };
-  await supabase.auth.signOut();
+  const store = await requireStore();
+  try {
+    await store.deleteAccount();
+  } catch (e) {
+    return { error: messageOf(e) };
+  }
+  if (isLocalMode()) {
+    revalidatePath("/app");
+    redirect("/app");
+  }
   redirect("/inloggen?melding=account-verwijderd");
 }

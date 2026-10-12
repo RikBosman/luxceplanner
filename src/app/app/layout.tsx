@@ -3,14 +3,17 @@ import Link from "next/link";
 import { redirect } from "next/navigation";
 import { Logo } from "@/components/logo";
 import { signOut } from "@/lib/auth/actions";
-import { getCurrentUser } from "@/lib/supabase/server";
+import { isLocalMode } from "@/lib/mode";
+import { localDataFile } from "@/lib/projects/local-store";
+import { getSessionUser } from "@/lib/session";
 
 export const metadata: Metadata = { title: "Mijn ontwerpen", robots: { index: false, follow: false } };
 
 export default async function AppLayout({ children }: { children: React.ReactNode }) {
   // Tweede controle naast de proxy: zonder geverifieerde gebruiker geen toegang.
-  const { user } = await getCurrentUser();
+  const user = await getSessionUser();
   if (!user) redirect("/inloggen?volgende=/app");
+  const local = isLocalMode();
 
   return (
     <div className="flex min-h-dvh flex-col">
@@ -34,14 +37,21 @@ export default async function AppLayout({ children }: { children: React.ReactNod
               <div className="absolute right-0 z-50 mt-2 w-56 rounded-xl border border-sand-200 bg-white p-1.5 shadow-lg">
                 <Link href="/app/account" className="block rounded-lg px-3 py-2 text-sm hover:bg-sand-100">Account en abonnement</Link>
                 <Link href="/" className="block rounded-lg px-3 py-2 text-sm hover:bg-sand-100 sm:hidden">Naar de website</Link>
-                <form action={signOut}>
-                  <button type="submit" className="block w-full rounded-lg px-3 py-2 text-left text-sm hover:bg-sand-100">Uitloggen</button>
-                </form>
+                {!local && (
+                  <form action={signOut}>
+                    <button type="submit" className="block w-full rounded-lg px-3 py-2 text-left text-sm hover:bg-sand-100">Uitloggen</button>
+                  </form>
+                )}
               </div>
             </details>
           </div>
         </div>
       </header>
+      {local && (
+        <p className="border-b border-moss-200 bg-moss-50 px-4 py-1.5 text-center text-xs text-moss-800">
+          Lokale modus — geen account nodig. Ontwerpen worden opgeslagen op deze computer in <code className="font-mono">{localDataFile()}</code>.
+        </p>
+      )}
       <main id="inhoud" className="flex flex-1 flex-col bg-sand-50">{children}</main>
     </div>
   );

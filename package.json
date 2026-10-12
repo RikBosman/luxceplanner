@@ -15,7 +15,8 @@
     "test": "vitest run",
     "test:watch": "vitest",
     "test:e2e": "playwright test",
-    "test:db": "bash supabase/tests/run-local.sh"
+    "test:db": "bash supabase/tests/run-local.sh",
+    "test:e2e:local": "E2E_LOCAL=1 playwright test"
   },
   "dependencies": {
     "@react-three/fiber": "9.8.1",

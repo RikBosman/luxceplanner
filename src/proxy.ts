@@ -1,5 +1,6 @@
 import { createServerClient } from "@supabase/ssr";
 import { NextResponse, type NextRequest } from "next/server";
+import { isLocalMode } from "@/lib/mode";
 import { getSupabaseEnv } from "@/lib/supabase/env";
 
 /**
@@ -8,6 +9,8 @@ import { getSupabaseEnv } from "@/lib/supabase/env";
  * toegangscontrole gebeurt opnieuw op de server en in de database (RLS).
  */
 export async function proxy(request: NextRequest) {
+  // Lokale modus: geen accounts, alles is toegankelijk op deze computer.
+  if (isLocalMode()) return NextResponse.next();
   const isAppRoute = request.nextUrl.pathname === "/app" || request.nextUrl.pathname.startsWith("/app/");
   const env = getSupabaseEnv();
 

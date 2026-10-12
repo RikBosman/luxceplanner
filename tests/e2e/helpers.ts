@@ -3,6 +3,7 @@ import { expect, type Page } from "@playwright/test";
 const GATEWAY = process.env.NEXT_PUBLIC_SUPABASE_URL ?? "http://127.0.0.1:54321";
 
 export const hasStack = () => process.env.E2E_STACK === "1";
+export const isLocal = () => process.env.E2E_LOCAL === "1";
 
 export function uniqueEmail(prefix: string) {
   return `${prefix}-${Date.now()}-${Math.floor(Math.random() * 1e6)}@example.com`;

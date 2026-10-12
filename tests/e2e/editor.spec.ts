@@ -1,8 +1,9 @@
 import { expect, test, type Page } from "@playwright/test";
-import { hasStack, registerAndConfirm, uniqueEmail } from "./helpers";
+import { hasStack, isLocal, registerAndConfirm, uniqueEmail } from "./helpers";
 
 async function newProject(page: Page, name = "Editor test") {
-  await registerAndConfirm(page, uniqueEmail("editor"), "Geheim123!");
+  if (isLocal()) await page.goto("/app");
+  else await registerAndConfirm(page, uniqueEmail("editor"), "Geheim123!");
   await page.getByLabel("Naam van je ontwerp").fill(name);
   await page.getByLabel("Breedte").fill("4 m");
   await page.getByLabel("Lengte").fill("5 m");
@@ -17,8 +18,8 @@ async function center(page: Page, locator: ReturnType<Page["locator"]>) {
   return { x: box.x + box.width / 2, y: box.y + box.height / 2 };
 }
 
-test.describe("2D-editor en 3D (vereist lokale stack)", () => {
-  test.skip(!hasStack(), "Start eerst tests/stack/start.sh");
+test.describe("2D-editor en 3D", () => {
+  test.skip(!hasStack() && !isLocal(), "Start eerst tests/stack/start.sh, of draai in lokale modus (pnpm test:e2e:local)");
 
   test("kamer op maat, meubels plaatsen, draaien, ongedaan maken, opslaan en opnieuw openen", async ({ page }) => {
     await newProject(page);

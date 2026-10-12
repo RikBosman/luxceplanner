@@ -16,7 +16,9 @@ export default async function DashboardPage({ searchParams }: { searchParams: Pr
         <div>
           <h1 className="font-serif text-3xl text-sand-900">Welkom in je ontwerpstudio</h1>
           <p className="mt-1 text-sand-600">
-            {plan ? `${plan.planName} plan · ${plan.projectCount}${plan.maxProjects != null ? ` van ${plan.maxProjects}` : ""} ontwerpen` : "Je ontwerpen"}
+            {plan
+              ? `${plan.planName} plan · ${plan.projectCount}${plan.maxProjects != null ? ` van ${plan.maxProjects}` : ""} ${plan.projectCount === 1 && plan.maxProjects == null ? "ontwerp" : "ontwerpen"}`
+              : "Je ontwerpen"}
           </p>
         </div>
         <a href="#nieuw-ontwerp" className="inline-flex items-center rounded-full bg-moss-600 px-5 py-2.5 text-sm font-medium text-white hover:bg-moss-700">

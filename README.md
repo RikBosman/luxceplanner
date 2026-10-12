@@ -39,7 +39,29 @@ Next.js 16 (App Router) · React 19 · TypeScript (strict) · Tailwind CSS 4 · 
 
 Zie [`docs/architectuur.md`](docs/architectuur.md) voor de onderbouwing (waaronder de afweging om OpenPlan3D niet als basis te gebruiken), het datamodel en de beveiliging.
 
-## Lokaal starten
+## Snel lokaal uitproberen (zonder Supabase)
+
+Alleen [Node.js](https://nodejs.org) (LTS-versie, 20.9 of nieuwer) is nodig. Geen database-installatie, geen account.
+
+```bash
+git clone https://github.com/RikBosman/luxceplanner.git
+cd luxceplanner
+git checkout claude/dazzling-einstein-9471kt
+npm install -g pnpm        # eenmalig
+pnpm install
+pnpm dev
+```
+
+Open daarna <http://localhost:3000>. `pnpm dev` start automatisch in **lokale modus** (ingesteld in `.env.development`):
+
+- je hoeft niet te registreren of in te loggen; "Inloggen" en "Gratis beginnen" brengen je direct naar de studio;
+- ontwerpen worden opgeslagen in `.data/ruimte-lokaal.json` in de projectmap (verwijder dat bestand om opnieuw te beginnen);
+- er is geen limiet op het aantal ontwerpen;
+- wijzigingen in de code zie je direct in de browser.
+
+Lokale modus is alleen bedoeld voor ontwikkelen en uitproberen, niet voor een publieke website (iedereen die de site kan bereiken, ziet alle ontwerpen). Wil je een productiebuild lokaal draaien, zet dan `RUIMTE_MODE=local` in `.env.local` vóór `pnpm build && pnpm start`.
+
+## Lokaal starten met Supabase
 
 Vereisten: Node.js 20.9+ (22 aanbevolen), pnpm 10, en een Supabase-project (gratis plan volstaat) **of** de Supabase CLI met Docker.
 
@@ -49,7 +71,7 @@ cp .env.example .env.local   # vul de waarden in, zie hieronder
 pnpm dev                      # http://localhost:3000
 ```
 
-Zonder Supabase-gegevens draait de marketingwebsite gewoon; de inlogpagina's tonen dan een duidelijke melding.
+Zet daarvoor in `.env.local` ook `RUIMTE_MODE=supabase`, anders blijft `pnpm dev` in lokale modus. Zonder Supabase-gegevens (en buiten lokale modus) tonen de inlogpagina's een duidelijke melding.
 
 ### Omgevingsvariabelen
 
@@ -60,6 +82,8 @@ Zonder Supabase-gegevens draait de marketingwebsite gewoon; de inlogpagina's ton
 | `NEXT_PUBLIC_SITE_URL` | ja (productie) | Publieke URL, bijv. `https://www.jouwdomein.nl`. Gebruikt voor e-maillinks, sitemap en canonieke URL's |
 | `NEXT_PUBLIC_BRAND_NAME` | nee | Merknaam, standaard `Ruimte` |
 | `NEXT_PUBLIC_CONTACT_EMAIL` | nee | Contactadres op de site en in juridische teksten |
+| `RUIMTE_MODE` | nee | `local` = lokale modus zonder Supabase (standaard bij `pnpm dev`), anders Supabase |
+| `RUIMTE_DATA_DIR` | nee | Map voor de lokale opslag, standaard `.data` |
 
 Er is bewust **geen** service-role-sleutel nodig in de app. Gebruik die nooit in clientcode.
 
@@ -87,6 +111,7 @@ pnpm lint             # ESLint
 pnpm test             # Vitest: datamodel, geometrie, bewerkingen, 3D-scène, autosave
 pnpm test:db          # Beveiligingstests van de database tegen een tijdelijke PostgreSQL (vereist PostgreSQL 15+)
 pnpm test:e2e         # Playwright: website, accounts, editor, opslaan, conflicten, 3D
+pnpm test:e2e:local   # dezelfde editortests in lokale modus (zonder Supabase; Linux/macOS)
 ```
 
 De accounts- en editortests hebben een draaiende Supabase-omgeving nodig. Zonder Docker kan dat met de meegeleverde lichte teststack (PostgreSQL + Supabase Auth + PostgREST + een mini-gateway en e-mailopvang):
@@ -119,7 +144,7 @@ src/
   components/editor/    2D-canvas, panelen, 3D-weergave, autosave-status
   components/plan/      statische SVG-weergaven (miniaturen, website)
   domain/project/       datamodel, validatie, migraties, geometrie, bewerkingen, snapping, 3D-scène (+ tests)
-  lib/                  Supabase-clients, serveracties, autosave
+  lib/                  opslag (Supabase of lokaal bestand), serveracties, autosave
   proxy.ts              sessieverversing en toegangscontrole voor /app
 supabase/migrations/    databaseschema met RLS
 supabase/tests/         SQL-beveiligingstests

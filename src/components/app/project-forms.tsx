@@ -76,13 +76,13 @@ export function DeleteProjectForm({ id, name, backToDashboard = false }: { id: s
   );
 }
 
-export function DeleteAccountForm() {
+export function DeleteAccountForm({ local = false }: { local?: boolean }) {
   const [state, action] = useActionState(deleteAccount, initial);
   return (
     <form action={action} className="space-y-3" noValidate>
       {state.error && <Alert>{state.error}</Alert>}
       <Field label='Typ "VERWIJDER" om te bevestigen' name="bevestiging" autoComplete="off" error={state.fields?.bevestiging} />
-      <SubmitButton pendingText="Account verwijderen…" variant="danger">Account en alle ontwerpen verwijderen</SubmitButton>
+      <SubmitButton pendingText="Bezig met verwijderen…" variant="danger">{local ? "Alle lokale ontwerpen wissen" : "Account en alle ontwerpen verwijderen"}</SubmitButton>
     </form>
   );
 }
