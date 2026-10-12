@@ -1,5 +1,8 @@
 import type { Metadata, Viewport } from "next";
 import { siteConfig } from "@/config/site";
+import "@fontsource-variable/cormorant-garamond";
+import "@fontsource-variable/jost";
+import "@fontsource/cinzel/500.css";
 import "./globals.css";
 
 export const metadata: Metadata = {
@@ -11,7 +14,7 @@ export const metadata: Metadata = {
   formatDetection: { telephone: false },
 };
 
-export const viewport: Viewport = { themeColor: "#fbf9f6" };
+export const viewport: Viewport = { themeColor: "#0d0b0a" };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
@@ -19,7 +22,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       <body className="min-h-dvh">
         <a
           href="#inhoud"
-          className="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-50 focus:rounded-md focus:bg-white focus:px-4 focus:py-2 focus:shadow"
+          className="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-50 focus:rounded-md focus:bg-white focus:text-ink-950 focus:px-4 focus:py-2 focus:shadow"
         >
           Naar de inhoud
         </a>

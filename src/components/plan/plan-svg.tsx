@@ -57,7 +57,7 @@ export function PlanSvg({
           <g key={o.id} transform={`translate(${c.x} ${c.y}) rotate(${angle})`}>
             <rect x={-half} y={-t / 2 - 5} width={o.width} height={t + 10} fill="#fbf9f6" />
             {o.type === "window" ? (
-              <g stroke="#5f7f4b" strokeWidth={18} fill="none">
+              <g stroke="#8a8f92" strokeWidth={18} fill="none">
                 <rect x={-half} y={-t / 2} width={o.width} height={t} />
                 <line x1={-half} y1={0} x2={half} y2={0} />
               </g>

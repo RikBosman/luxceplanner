@@ -9,15 +9,15 @@ export function SaveStatus({ state, onRetry, onDownload }: { state: AutosaveStat
   switch (state.status) {
     case "saved":
       return (
-        <p role="status" data-testid="save-status" data-status="saved" className={`${base} text-moss-700`}>
-          <span aria-hidden="true" className="size-2 rounded-full bg-moss-500" />
+        <p role="status" data-testid="save-status" data-status="saved" className={`${base} text-gold-700`}>
+          <span aria-hidden="true" className="size-2 rounded-full bg-gold-500" />
           {state.lastSavedAt ? `Opgeslagen om ${timeFormat.format(state.lastSavedAt)}` : "Alles opgeslagen"}
         </p>
       );
     case "pending":
       return <p role="status" data-testid="save-status" data-status="pending" className={`${base} text-sand-700`}><span aria-hidden="true" className="size-2 rounded-full bg-sand-400" />Wijzigingen nog niet opgeslagen</p>;
     case "saving":
-      return <p role="status" data-testid="save-status" data-status="saving" className={`${base} text-sand-700`}><span aria-hidden="true" className="size-2 animate-pulse rounded-full bg-moss-400" />Opslaan…</p>;
+      return <p role="status" data-testid="save-status" data-status="saving" className={`${base} text-sand-700`}><span aria-hidden="true" className="size-2 animate-pulse rounded-full bg-gold-400" />Opslaan…</p>;
     case "error":
       return (
         <div role="alert" data-testid="save-status" data-status="error" className={`${base} bg-clay-500/10 text-clay-600`}>

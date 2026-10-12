@@ -11,7 +11,7 @@ export default function SignUpPage() {
       <p className="mt-2 text-sand-600">Maak een account aan. We vragen alleen je e-mailadres.</p>
       <div className="mt-6"><SignUpForm /></div>
       <p className="mt-6 text-center text-sm text-sand-600">
-        Heb je al een account? <Link href="/inloggen" className="font-medium text-moss-700 underline-offset-4 hover:underline">Inloggen</Link>
+        Heb je al een account? <Link href="/inloggen" className="font-medium text-gold-700 underline-offset-4 hover:underline">Inloggen</Link>
       </p>
     </>
   );

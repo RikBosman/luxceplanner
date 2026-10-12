@@ -19,7 +19,7 @@ export default async function ResetPasswordPage() {
       ) : (
         <div className="mt-6 space-y-4">
           <Alert>Deze pagina werkt alleen via de link in de herstel-e-mail. De link is mogelijk verlopen.</Alert>
-          <Link href="/wachtwoord-vergeten" className="text-moss-700 underline">Vraag een nieuwe link aan</Link>
+          <Link href="/wachtwoord-vergeten" className="text-gold-700 underline">Vraag een nieuwe link aan</Link>
         </div>
       )}
     </>

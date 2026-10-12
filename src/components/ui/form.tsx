@@ -19,7 +19,7 @@ export function Field({
         name={name}
         aria-invalid={error ? true : undefined}
         aria-describedby={describedBy}
-        className="block w-full rounded-lg border border-sand-300 bg-white px-3 py-2.5 text-sand-900 shadow-sm placeholder:text-sand-400 focus:border-moss-500 aria-[invalid=true]:border-clay-500"
+        className="block w-full rounded-lg border border-sand-300 bg-white px-3 py-2.5 text-sand-900 shadow-sm placeholder:text-sand-400 focus:border-gold-500 aria-[invalid=true]:border-clay-500"
         {...input}
       />
       {hint && (
@@ -39,7 +39,7 @@ export function Field({
 export function Alert({ tone = "error", children }: { tone?: "error" | "success" | "info"; children: React.ReactNode }) {
   const styles = {
     error: "border-clay-500/40 bg-clay-500/10 text-clay-600",
-    success: "border-moss-400/50 bg-moss-50 text-moss-800",
+    success: "border-gold-400/50 bg-gold-50 text-gold-800",
     info: "border-sand-300 bg-sand-100 text-sand-800",
   }[tone];
   return (

@@ -1,10 +1,10 @@
 /**
- * Centrale merk- en siteconfiguratie. De merknaam is voorlopig "Ruimte" en via NEXT_PUBLIC_BRAND_NAME te wijzigen.
+ * Centrale merk- en siteconfiguratie. Merknaam: LucxePlanner (zoals in het logo), via NEXT_PUBLIC_BRAND_NAME te wijzigen.
  * Controleer vóór de commerciële lancering de beschikbaarheid van merknaam en domein.
  */
 export const siteConfig = {
-  name: process.env.NEXT_PUBLIC_BRAND_NAME?.trim() || "Ruimte",
-  tagline: "Teken je kamer, richt hem in en bekijk je ontwerp in 3D — eenvoudig, intuïtief en op jouw manier.",
+  name: process.env.NEXT_PUBLIC_BRAND_NAME?.trim() || "LucxePlanner",
+  tagline: "Ontwerp je interieur met allure. Teken je kamer, richt hem in en bekijk je ontwerp in 3D — eenvoudig, intuïtief en op jouw manier.",
   description:
     "Ontwerp je woning online in 2D en 3D. Teken kamers op echte maat, plaats meubels en bekijk het resultaat direct ruimtelijk. Gratis beginnen, geen installatie nodig.",
   url: (process.env.NEXT_PUBLIC_SITE_URL?.trim() || "http://localhost:3000").replace(/\/$/, ""),

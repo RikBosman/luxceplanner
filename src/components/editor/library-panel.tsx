@@ -53,7 +53,7 @@ export function LibraryPanel({ editor, viewCenter }: { editor: EditorApi; viewCe
                         return { doc: r.doc, selection: { kind: "furniture", id: r.furnitureId } };
                       });
                     }}
-                    className="flex w-full flex-col items-center gap-1 rounded-lg border border-sand-200 bg-white p-2 text-center text-xs text-sand-800 hover:border-moss-400 hover:bg-moss-50"
+                    className="flex w-full flex-col items-center gap-1 rounded-lg border border-sand-200 bg-white p-2 text-center text-xs text-sand-800 hover:border-gold-400 hover:bg-gold-50"
                     title={`${item.name} — ${item.width} × ${item.depth} × ${item.height} mm`}
                   >
                     <svg viewBox={`${-item.width / 2 - 60} ${-item.depth / 2 - 60} ${item.width + 120} ${item.depth + 120}`} className="h-10 w-full" aria-hidden="true">
@@ -103,7 +103,7 @@ function AddRoomForm({ onAdd, hasWalls }: { onAdd: (width: number, length: numbe
           </label>
         </div>
         {error && <p role="alert" className="text-xs text-clay-600">{error}</p>}
-        <button type="submit" className="w-full rounded-md bg-moss-600 px-3 py-1.5 text-sm font-medium text-white hover:bg-moss-700">Rechthoekige kamer toevoegen</button>
+        <button type="submit" className="w-full rounded-md bg-gold-400 px-3 py-1.5 text-sm font-medium text-ink-950 hover:bg-gold-300">Rechthoekige kamer toevoegen</button>
         <p className="text-xs text-sand-500">Binnenmaten. Of teken zelf muren met het muurgereedschap (W).</p>
       </form>
     </section>

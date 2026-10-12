@@ -10,7 +10,7 @@ export default function ForgotPasswordPage() {
       <h1 className="font-serif text-3xl text-sand-900">Wachtwoord vergeten</h1>
       <p className="mt-2 text-sand-600">Vul je e-mailadres in. Je ontvangt een link om een nieuw wachtwoord in te stellen.</p>
       <div className="mt-6"><ResetRequestForm /></div>
-      <p className="mt-6 text-center text-sm"><Link href="/inloggen" className="text-moss-700 underline-offset-4 hover:underline">Terug naar inloggen</Link></p>
+      <p className="mt-6 text-center text-sm"><Link href="/inloggen" className="text-gold-700 underline-offset-4 hover:underline">Terug naar inloggen</Link></p>
     </>
   );
 }

@@ -42,7 +42,7 @@ function livingRoom(): ProjectDocument {
       rooms: [{ ...room, id: "room_1", floorMaterialId: "mat_floor" }],
       openings: [
         { id: "door_1", type: "door", wallId: "wall_4", offset: 3400, width: 930, height: 2115, sillHeight: 0, swing: "left", flipped: false },
-        { id: "window_1", type: "window", wallId: "wall_1", offset: 1600, width: 1800, height: 1500, sillHeight: 700, swing: "left", flipped: false },
+        { id: "window_1", type: "window", wallId: "wall_1", offset: 4400, width: 1800, height: 1500, sillHeight: 700, swing: "left", flipped: false },
         { id: "window_2", type: "window", wallId: "wall_2", offset: 2150, width: 1600, height: 1500, sillHeight: 700, swing: "left", flipped: false },
       ],
       furniture: [

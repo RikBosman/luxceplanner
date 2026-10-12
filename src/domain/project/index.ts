@@ -12,3 +12,4 @@ export * from "./bounds";
 export * from "./commands";
 export * from "./snapping";
 export * from "./scene";
+export * from "./furniture-parts";

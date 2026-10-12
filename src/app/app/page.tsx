@@ -21,7 +21,7 @@ export default async function DashboardPage({ searchParams }: { searchParams: Pr
               : "Je ontwerpen"}
           </p>
         </div>
-        <a href="#nieuw-ontwerp" className="inline-flex items-center rounded-full bg-moss-600 px-5 py-2.5 text-sm font-medium text-white hover:bg-moss-700">
+        <a href="#nieuw-ontwerp" className="inline-flex items-center rounded-full bg-gold-400 px-5 py-2.5 text-sm font-medium text-ink-950 hover:bg-gold-300">
           + Nieuw ontwerp
         </a>
       </div>
@@ -56,7 +56,7 @@ export default async function DashboardPage({ searchParams }: { searchParams: Pr
                     </h3>
                     <p className="text-xs text-sand-600">Laatst gewijzigd: <time dateTime={p.updatedAt}>{dateFormat.format(new Date(p.updatedAt))}</time></p>
                     <div className="mt-3 flex flex-wrap items-start gap-1">
-                      <Link href={`/app/projecten/${p.id}`} className="rounded-full bg-moss-600 px-3 py-1.5 text-sm font-medium text-white hover:bg-moss-700">Openen</Link>
+                      <Link href={`/app/projecten/${p.id}`} className="rounded-full bg-gold-400 px-3 py-1.5 text-sm font-medium text-ink-950 hover:bg-gold-300">Openen</Link>
                       <RenameProjectForm id={p.id} name={p.name} />
                       <DuplicateProjectForm id={p.id} />
                       <DeleteProjectForm id={p.id} name={p.name} />

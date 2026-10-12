@@ -40,7 +40,7 @@ test.describe("marketingwebsite", () => {
     const context = await browser.newContext({ javaScriptEnabled: false });
     const page = await context.newPage();
     await page.goto("/");
-    await expect(page.getByRole("heading", { level: 1 })).toContainText("Teken je kamer");
+    await expect(page.getByRole("heading", { level: 1 })).toContainText("Ontwerp je interieur");
     await expect(page.getByText("In drie stappen")).toBeVisible();
     await context.close();
   });

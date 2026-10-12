@@ -21,13 +21,13 @@ export default function PricingPage() {
       <PageHero eyebrow="Prijzen" title="Gratis beginnen, uitbreiden wanneer je wilt" intro="Je kunt nu gratis ontwerpen. Betaalde abonnementen zijn nog in voorbereiding en kunnen nog niet worden afgesloten." />
       <div className="container-page grid gap-6 md:grid-cols-3">
         {plans.map((p) => (
-          <section key={p.name} aria-labelledby={`plan-${p.name}`} className={`flex flex-col rounded-3xl border p-7 ${p.available ? "border-moss-400 bg-white shadow-sm" : "border-sand-200 bg-sand-100/50"}`}>
+          <section key={p.name} aria-labelledby={`plan-${p.name}`} className={`flex flex-col rounded-3xl border p-7 ${p.available ? "border-gold-400 bg-white shadow-sm" : "border-sand-200 bg-sand-100/50"}`}>
             <h2 id={`plan-${p.name}`} className="text-lg font-semibold text-sand-900">{p.name}</h2>
             <p className="mt-3 text-2xl font-semibold text-sand-900">{p.price}</p>
             <p className="text-sm text-sand-600">{p.note}</p>
             <ul className="mt-6 flex-1 space-y-2 text-sm text-sand-700">
               {p.features.map((f) => (
-                <li key={f} className="flex gap-2"><span aria-hidden="true" className="text-moss-600">✓</span>{f}</li>
+                <li key={f} className="flex gap-2"><span aria-hidden="true" className="text-gold-600">✓</span>{f}</li>
               ))}
             </ul>
             {p.available ? (

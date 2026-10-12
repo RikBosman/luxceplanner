@@ -27,7 +27,7 @@ export default function FaqPage() {
             </div>
           ))}
         </dl>
-        <p className="mt-6 text-sand-700">Staat je vraag er niet bij? <Link href="/contact" className="text-moss-700 underline underline-offset-4">Neem contact op</Link>.</p>
+        <p className="mt-6 text-sand-700">Staat je vraag er niet bij? <Link href="/contact" className="text-gold-700 underline underline-offset-4">Neem contact op</Link>.</p>
       </div>
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd).replace(/</g, "\\u003c") }} />
       <CtaBand />

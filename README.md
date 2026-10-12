@@ -1,6 +1,6 @@
-# Ruimte — online 2D/3D-interieurontwerp
+# LucxePlanner — online 2D/3D-interieurontwerp
 
-Werktitel: **Ruimte** (configureerbaar via `NEXT_PUBLIC_BRAND_NAME`). Controleer merknaam en domein vóór de commerciële lancering.
+Merknaam: **LucxePlanner** (configureerbaar via `NEXT_PUBLIC_BRAND_NAME`). Logo-bestanden staan in `public/brand/`; de huisstijl (inktzwart, ivoor, goud; Cormorant Garamond, Cinzel en Jost, zelf gehost) in `src/app/globals.css`.
 
 Eén product, twee gescheiden onderdelen:
 
@@ -80,7 +80,7 @@ Zet daarvoor in `.env.local` ook `RUIMTE_MODE=supabase`, anders blijft `pnpm dev
 | `NEXT_PUBLIC_SUPABASE_URL` | ja | Project Settings → API → Project URL |
 | `NEXT_PUBLIC_SUPABASE_ANON_KEY` | ja | Project Settings → API → anon/publishable key. Mag in de browser; toegang wordt door RLS afgedwongen |
 | `NEXT_PUBLIC_SITE_URL` | ja (productie) | Publieke URL, bijv. `https://www.jouwdomein.nl`. Gebruikt voor e-maillinks, sitemap en canonieke URL's |
-| `NEXT_PUBLIC_BRAND_NAME` | nee | Merknaam, standaard `Ruimte` |
+| `NEXT_PUBLIC_BRAND_NAME` | nee | Merknaam, standaard `LucxePlanner` |
 | `NEXT_PUBLIC_CONTACT_EMAIL` | nee | Contactadres op de site en in juridische teksten |
 | `RUIMTE_MODE` | nee | `local` = lokale modus zonder Supabase (standaard bij `pnpm dev`), anders Supabase |
 | `RUIMTE_DATA_DIR` | nee | Map voor de lokale opslag, standaard `.data` |

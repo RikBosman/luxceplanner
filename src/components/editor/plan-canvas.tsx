@@ -41,7 +41,7 @@ type Drag =
   | { kind: "furniture"; id: string; offset: Point; moved: boolean }
   | { kind: "rotate"; id: string; moved: boolean };
 
-const SELECT = "#4a663a";
+const SELECT = "#9a7428";
 
 export function PlanCanvas({
   editor,
@@ -303,7 +303,7 @@ export function PlanCanvas({
       })}
 
       {floor.walls.map((w) => (
-        <line key={w.id} x1={w.start.x} y1={w.start.y} x2={w.end.x} y2={w.end.y} stroke={selection?.id === w.id ? "#3b512f" : "#3f372e"} strokeWidth={w.thickness} strokeLinecap="square" />
+        <line key={w.id} x1={w.start.x} y1={w.start.y} x2={w.end.x} y2={w.end.y} stroke={selection?.id === w.id ? "#7a5b1e" : "#3f372e"} strokeWidth={w.thickness} strokeLinecap="square" />
       ))}
 
       {floor.openings.map((o) => {
@@ -325,7 +325,7 @@ export function PlanCanvas({
           >
             <rect x={-half} y={-t / 2 - 2 * px} width={o.width} height={t + 4 * px} fill="#fbfaf7" />
             {o.type === "window" ? (
-              <g stroke={selected ? SELECT : "#5f7f4b"} strokeWidth={2 * px} fill="#e6eef0">
+              <g stroke={selected ? SELECT : "#8a8f92"} strokeWidth={2 * px} fill="#e6eef0">
                 <rect x={-half} y={-t / 2} width={o.width} height={t} />
                 <line x1={-half} y1={0} x2={half} y2={0} />
               </g>

@@ -130,7 +130,7 @@ function Overview({ doc, editor }: { doc: ProjectDocument; editor: EditorApi }) 
       <section className="space-y-3">
         <h2 className="text-sm font-semibold text-sand-900">Instellingen</h2>
         <label className="flex items-center gap-2 text-sm text-sand-800">
-          <input type="checkbox" className="size-4 accent-moss-600" checked={doc.settings.snapToGrid} onChange={(e) => editor.apply((d) => updateSettings(d, { snapToGrid: e.target.checked }))} />
+          <input type="checkbox" className="size-4 accent-gold-600" checked={doc.settings.snapToGrid} onChange={(e) => editor.apply((d) => updateSettings(d, { snapToGrid: e.target.checked }))} />
           Uitlijnen op raster ({formatLength(doc.settings.gridSize)})
         </label>
         <DimensionInput label="Muurhoogte (alle muren)" value={doc.settings.defaultWallHeight} min={1000} onCommit={(v) => editor.apply((d) => setAllWallHeights(d, floor.id, v))} />

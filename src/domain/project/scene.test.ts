@@ -12,8 +12,32 @@ import {
   SAMPLE_DESIGNS,
   setFloorColor,
   setWallColor,
+  FURNITURE_CATALOG,
+  furnitureParts,
+  type Box3,
   type ProjectDocument,
 } from ".";
+
+/** Omhullend kader (in meters) van gedraaide blokken. */
+function worldBounds(boxes: Box3[]) {
+  const pts = boxes.flatMap((b) => {
+    const c = Math.cos(b.rotationY);
+    const s = Math.sin(b.rotationY);
+    return [-1, 1].flatMap((i) =>
+      [-1, 1].map((k) => {
+        const lx = (i * b.size[0]) / 2;
+        const lz = (k * b.size[2]) / 2;
+        // Rotatie rond y (Three.js): x' = x cos + z sin, z' = -x sin + z cos
+        return { x: b.center[0] + lx * c + lz * s, z: b.center[2] - lx * s + lz * c, y0: b.center[1] - b.size[1] / 2, y1: b.center[1] + b.size[1] / 2 };
+      }),
+    );
+  });
+  return {
+    minX: Math.min(...pts.map((p) => p.x)), maxX: Math.max(...pts.map((p) => p.x)),
+    minZ: Math.min(...pts.map((p) => p.z)), maxZ: Math.max(...pts.map((p) => p.z)),
+    maxY: Math.max(...pts.map((p) => p.y1)),
+  };
+}
 
 function room() {
   const base = createEmptyProject();
@@ -58,15 +82,37 @@ describe("3D-scène komt overeen met de projectdata", () => {
     expect(solidFull + 1.2).toBeCloseTo(4.2, 9);
   });
 
-  it("plaatst meubels op dezelfde positie en draaiing als in 2D", () => {
+  it("plaatst meubels op dezelfde positie, maat en draaiing als in 2D", () => {
     const { doc, fid } = room();
     const { doc: d1, furnitureId } = addFurniture(doc, fid, "wardrobe", { x: 0, y: 0 });
     const d2 = rotateFurniture(moveFurniture(d1, fid, furnitureId, { x: 1000, y: 3000 }), fid, furnitureId, 90);
     const parts = buildScene(d2.floors[0]!, d2.materials).boxes.filter((b) => b.sourceId === furnitureId);
-    expect(parts).toHaveLength(1);
-    expect(parts[0]!.center).toEqual([expect.closeTo(1, 9), expect.closeTo(1.05, 9), expect.closeTo(3, 9)]);
-    expect(parts[0]!.size).toEqual([expect.closeTo(1.5, 9), expect.closeTo(2.1, 9), expect.closeTo(0.6, 9)]);
-    expect(parts[0]!.rotationY).toBeCloseTo(-Math.PI / 2, 9);
+    expect(parts.length).toBeGreaterThan(3); // romp, deuren, grepen, plint
+    for (const p of parts) expect(p.rotationY).toBeCloseTo(-Math.PI / 2, 9);
+    const b = worldBounds(parts);
+    // 90° gedraaid: de breedte (1500) ligt langs plan-y, de diepte (600) langs plan-x (+ grepen tot 18 mm).
+    expect(b.maxZ - b.minZ).toBeCloseTo(1.5, 2);
+    expect(b.maxX - b.minX).toBeGreaterThanOrEqual(0.6 - 1e-9);
+    expect(b.maxX - b.minX).toBeLessThanOrEqual(0.62);
+    expect((b.minZ + b.maxZ) / 2).toBeCloseTo(3, 2);
+    expect(b.maxY).toBeCloseTo(2.1, 9);
+  });
+
+  it("houdt elk meubel uit de bibliotheek binnen zijn opgegeven maten", () => {
+    for (const item of FURNITURE_CATALOG) {
+      const parts = furnitureParts(item.kind, item.width, item.depth, item.height);
+      expect(parts.length, item.catalogId).toBeGreaterThan(1);
+      for (const p of parts) {
+        expect(p.sx > 0 && p.sy > 0 && p.sz > 0, `${item.catalogId}: positieve maten`).toBe(true);
+        // Kleine uitsteeksels (grepen, werkblad-overstek) tot 25 mm zijn toegestaan.
+        expect(Math.abs(p.x) + p.sx / 2, `${item.catalogId}: breedte`).toBeLessThanOrEqual(item.width / 2 + 25);
+        expect(Math.abs(p.z) + p.sz / 2, `${item.catalogId}: diepte`).toBeLessThanOrEqual(item.depth / 2 + 25);
+        expect(p.y - p.sy / 2, `${item.catalogId}: niet onder de vloer`).toBeGreaterThanOrEqual(0);
+      }
+      const top = Math.max(...parts.map((p) => p.y + p.sy / 2));
+      // Hoofdbord van een bed en een kraan mogen boven de opgegeven hoogte uitkomen.
+      expect(top, item.catalogId).toBeLessThanOrEqual(item.height + (item.kind === "bed" ? 600 : item.kind === "kitchen" || item.kind === "vanity" ? 310 : 1));
+    }
   });
 
   it("gebruikt de gekozen kleuren", () => {

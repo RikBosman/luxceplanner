@@ -80,7 +80,7 @@ export function View3D({ editor }: { editor: EditorApi }) {
           </button>
         ))}
         <label className="flex items-center gap-1.5 border-l border-sand-200 px-2.5 text-xs text-sand-800">
-          <input type="checkbox" checked={cutaway} onChange={(e) => setCutaway(e.target.checked)} className="accent-moss-600" />
+          <input type="checkbox" checked={cutaway} onChange={(e) => setCutaway(e.target.checked)} className="accent-gold-600" />
           Voorste muren verlagen
         </label>
       </div>
@@ -114,7 +114,7 @@ function ColorPicker({ label, value, swatches, onPick }: { label: string; value:
             aria-label={`${label}: kleur ${c}`}
             aria-pressed={value.toLowerCase() === c}
             onClick={() => onPick(c)}
-            className={`size-6 rounded-full border ${value.toLowerCase() === c ? "border-moss-600 ring-2 ring-moss-400" : "border-sand-300"}`}
+            className={`size-6 rounded-full border ${value.toLowerCase() === c ? "border-gold-600 ring-2 ring-gold-400" : "border-sand-300"}`}
             style={{ background: c }}
           />
         ))}

@@ -24,7 +24,7 @@ export default async function SignInPage({ searchParams }: { searchParams: Promi
         <SignInForm next={next} />
       </div>
       <p className="mt-6 text-center text-sm text-sand-600">
-        Nog geen account? <Link href="/registreren" className="font-medium text-moss-700 underline-offset-4 hover:underline">Gratis registreren</Link>
+        Nog geen account? <Link href="/registreren" className="font-medium text-gold-700 underline-offset-4 hover:underline">Gratis registreren</Link>
       </p>
     </>
   );

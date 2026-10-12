@@ -259,14 +259,14 @@ export function Editor({
   }, [editor.tool, floor.walls.length]);
 
   return (
-    <div className="flex h-[calc(100dvh-3.5rem)] min-h-[520px] flex-col">
+    <div className="flex min-h-[520px] flex-1 flex-col">
       <div className="flex flex-wrap items-center gap-2 border-b border-sand-200 bg-white px-3 py-2">
         <Link href="/app" className="rounded-md px-2 py-1 text-sm text-sand-600 hover:bg-sand-100">← Mijn ontwerpen</Link>
         <h1 className="mr-2 max-w-[16rem] truncate text-sm font-semibold text-sand-900" title={projectName}>{projectName}</h1>
 
         <div role="group" aria-label="Weergave" className="flex rounded-lg border border-sand-300 p-0.5">
           {(["2d", "3d"] as const).map((v) => (
-            <button key={v} type="button" aria-pressed={view === v} onClick={() => setView(v)} className={`rounded-md px-3 py-1 text-sm ${view === v ? "bg-moss-600 text-white" : "text-sand-700 hover:bg-sand-100"}`}>
+            <button key={v} type="button" aria-pressed={view === v} onClick={() => setView(v)} className={`rounded-md px-3 py-1 text-sm ${view === v ? "bg-gold-400 text-ink-950" : "text-sand-700 hover:bg-sand-100"}`}>
               {v.toUpperCase()}
             </button>
           ))}
@@ -303,7 +303,7 @@ export function Editor({
       {restore && (
         <div role="alert" className="flex flex-wrap items-center gap-3 border-b border-sand-300 bg-sand-100 px-4 py-2 text-sm">
           <span>Er zijn niet-opgeslagen wijzigingen van een eerdere sessie gevonden op dit apparaat.</span>
-          <button type="button" className="font-semibold text-moss-700 underline" onClick={() => { editor.replace(restore); setRestore(null); }}>Herstellen</button>
+          <button type="button" className="font-semibold text-gold-700 underline" onClick={() => { editor.replace(restore); setRestore(null); }}>Herstellen</button>
           <button type="button" className="text-sand-700 underline" onClick={() => { try { window.localStorage.removeItem(backupKey(projectId)); } catch {} setRestore(null); }}>Negeren</button>
         </div>
       )}

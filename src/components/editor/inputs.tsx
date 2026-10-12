@@ -37,7 +37,7 @@ export function DimensionInput({
   return (
     <div className="space-y-1">
       <label htmlFor={id} className="block text-xs font-medium text-sand-700">{label}</label>
-      <div className="flex items-center rounded-md border border-sand-300 bg-white focus-within:border-moss-500 aria-[invalid=true]:border-clay-500" aria-invalid={error ? true : undefined}>
+      <div className="flex items-center rounded-md border border-sand-300 bg-white focus-within:border-gold-500 aria-[invalid=true]:border-clay-500" aria-invalid={error ? true : undefined}>
         <input
           id={id}
           value={text}
@@ -79,7 +79,7 @@ export function NumberInput({ label, value, onCommit, suffix }: { label: string;
   return (
     <div className="space-y-1">
       <label htmlFor={id} className="block text-xs font-medium text-sand-700">{label}</label>
-      <div className="flex items-center rounded-md border border-sand-300 bg-white focus-within:border-moss-500">
+      <div className="flex items-center rounded-md border border-sand-300 bg-white focus-within:border-gold-500">
         <input id={id} value={text} inputMode="decimal" onChange={(e) => setText(e.target.value)} onBlur={commit} onKeyDown={(e) => e.key === "Enter" && commit()} className="w-full min-w-0 rounded-md bg-transparent px-2 py-1.5 text-sm outline-none" />
         {suffix && <span className="pr-2 text-xs text-sand-500">{suffix}</span>}
       </div>

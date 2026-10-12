@@ -1,32 +1,41 @@
 @import "tailwindcss";
 
 @theme {
-  --font-sans: "Inter", ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
-  --font-serif: "Iowan Old Style", "Palatino Linotype", Palatino, "Book Antiqua", Georgia, serif;
+  /* Huisstijl LucxePlanner — afgeleid van het logo: inktzwart, ivoor en goud. */
+  --font-sans: "Jost Variable", "Jost", ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
+  --font-serif: "Cormorant Garamond Variable", "Cormorant Garamond", "Iowan Old Style", Palatino, Georgia, serif;
+  --font-display: "Cinzel", "Cormorant Garamond Variable", Georgia, serif;
 
-  /* Warme neutrale basis */
-  --color-sand-50: #fbf9f6;
-  --color-sand-100: #f5f1eb;
-  --color-sand-200: #ebe4d9;
-  --color-sand-300: #dccfbe;
-  --color-sand-400: #c2b19b;
-  --color-sand-500: #a08d76;
-  --color-sand-600: #7d6c58;
-  --color-sand-700: #5e5143;
-  --color-sand-800: #3f372e;
-  --color-sand-900: #2a251f;
+  /* Inkt (achtergrond van het logo) */
+  --color-ink-700: #2a2520;
+  --color-ink-800: #1b1815;
+  --color-ink-900: #13110f;
+  --color-ink-950: #0d0b0a;
 
-  /* Aardse groene accenten */
-  --color-moss-50: #f2f5ef;
-  --color-moss-100: #e1e9da;
-  --color-moss-200: #c4d4b7;
-  --color-moss-300: #a0b98c;
-  --color-moss-400: #7d9c67;
-  --color-moss-500: #5f7f4b;
-  --color-moss-600: #4a663a;
-  --color-moss-700: #3b512f;
-  --color-moss-800: #2f4027;
-  --color-moss-900: #263420;
+  /* Ivoor en warme neutrale tinten */
+  --color-ivory: #f3ece0;
+  --color-sand-50: #fbf8f2;
+  --color-sand-100: #f5f0e7;
+  --color-sand-200: #ebe3d6;
+  --color-sand-300: #d9cfbf;
+  --color-sand-400: #b6ab9b;
+  --color-sand-500: #776e63;
+  --color-sand-600: #6e665b;
+  --color-sand-700: #4f4840;
+  --color-sand-800: #2f2a25;
+  --color-sand-900: #171411;
+
+  /* Goud */
+  --color-gold-50: #fbf6ea;
+  --color-gold-100: #f4e7c8;
+  --color-gold-200: #ead39b;
+  --color-gold-300: #ddbb6d;
+  --color-gold-400: #cfa34a;
+  --color-gold-500: #b98d38;
+  --color-gold-600: #9a7428;
+  --color-gold-700: #7a5b1e;
+  --color-gold-800: #5c4416;
+  --color-gold-900: #3d2d0f;
 
   --color-clay-500: #b5654a;
   --color-clay-600: #9a523a;
@@ -41,12 +50,16 @@
     @apply bg-sand-50 text-sand-900 antialiased;
   }
   :focus-visible {
-    outline: 3px solid var(--color-moss-500);
+    outline: 3px solid var(--color-gold-500);
     outline-offset: 2px;
     border-radius: 4px;
   }
   h1, h2, h3 {
     text-wrap: balance;
+  }
+  ::selection {
+    background: var(--color-gold-200);
+    color: var(--color-ink-950);
   }
   @media (prefers-reduced-motion: reduce) {
     *, *::before, *::after {
@@ -64,4 +77,18 @@
   @media (width >= 40rem) {
     padding-inline: 1.5rem;
   }
+}
+
+/* Gouden accentlijn, zoals onder het logo. */
+@utility gold-rule {
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--color-gold-400), transparent);
+}
+
+/* Gouden verloop voor koppen op donkere achtergrond. */
+@utility text-gold-gradient {
+  background: linear-gradient(100deg, #b98d38 0%, #ead39b 45%, #cfa34a 70%, #9a7428 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
 }

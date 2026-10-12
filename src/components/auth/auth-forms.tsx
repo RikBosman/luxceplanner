@@ -17,7 +17,7 @@ export function SignInForm({ next }: { next?: string }) {
       <Field label="E-mailadres" name="email" type="email" autoComplete="email" required defaultValue={state.values?.email} error={state.fields?.email} />
       <Field label="Wachtwoord" name="password" type="password" autoComplete="current-password" required error={state.fields?.password} />
       <div className="flex justify-end text-sm">
-        <Link href="/wachtwoord-vergeten" className="text-moss-700 underline-offset-4 hover:underline">Wachtwoord vergeten?</Link>
+        <Link href="/wachtwoord-vergeten" className="text-gold-700 underline-offset-4 hover:underline">Wachtwoord vergeten?</Link>
       </div>
       <SubmitButton pendingText="Bezig met inloggen…" className="w-full">Inloggen</SubmitButton>
     </form>
@@ -35,10 +35,10 @@ export function SignUpForm() {
       <Field label="Herhaal wachtwoord" name="passwordConfirm" type="password" autoComplete="new-password" required error={state.fields?.passwordConfirm} />
       <div className="space-y-1">
         <label className="flex items-start gap-3 text-sm text-sand-700">
-          <input type="checkbox" name="terms" required className="mt-0.5 size-4 accent-moss-600" aria-describedby={state.fields?.terms ? "terms-fout" : undefined} />
+          <input type="checkbox" name="terms" required className="mt-0.5 size-4 accent-gold-600" aria-describedby={state.fields?.terms ? "terms-fout" : undefined} />
           <span>
-            Ik ga akkoord met de <Link href="/voorwaarden" className="text-moss-700 underline" target="_blank">gebruiksvoorwaarden</Link> en heb de{" "}
-            <Link href="/privacy" className="text-moss-700 underline" target="_blank">privacyverklaring</Link> gelezen.
+            Ik ga akkoord met de <Link href="/voorwaarden" className="text-gold-700 underline" target="_blank">gebruiksvoorwaarden</Link> en heb de{" "}
+            <Link href="/privacy" className="text-gold-700 underline" target="_blank">privacyverklaring</Link> gelezen.
           </span>
         </label>
         {state.fields?.terms && <p id="terms-fout" className="text-sm text-clay-600">{state.fields.terms}</p>}

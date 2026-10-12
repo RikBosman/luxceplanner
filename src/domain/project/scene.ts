@@ -6,6 +6,7 @@
  * Rotatie rond y: plan-rotatie θ (met de klok mee op het scherm) wordt -θ in 3D.
  */
 import { getCatalogItem } from "./catalog";
+import { furnitureParts } from "./furniture-parts";
 import { polygonArea, wallLength } from "./geometry";
 import type { Floor, Material, Point } from "./schema";
 
@@ -38,67 +39,10 @@ export interface Scene3D {
   warnings: string[];
 }
 
-interface LocalBox {
-  x: number;
-  y: number;
-  z: number;
-  sx: number;
-  sy: number;
-  sz: number;
-  shade?: number;
-}
-
-function shadeHex(hex: string, f: number) {
+export function shadeHex(hex: string, f: number) {
   const n = parseInt(hex.slice(1), 16);
   const c = (s: number) => Math.max(0, Math.min(255, Math.round(((n >> s) & 255) * f)));
   return `#${[c(16), c(8), c(0)].map((v) => v.toString(16).padStart(2, "0")).join("")}`;
-}
-
-/**
- * Eenvoudige, zelfgemaakte vormen per meubeltype, in mm, lokaal rond (0, 0) met de vloer op y = 0.
- * Lokale assen: x = breedte, z = diepte (voorkant naar +z), y = hoogte.
- */
-export function furnitureParts(kind: string, w: number, d: number, h: number): LocalBox[] {
-  const legs = (top: number, inset: number, size: number): LocalBox[] =>
-    [-1, 1].flatMap((sx) => [-1, 1].map((sz) => ({ x: sx * (w / 2 - inset), y: top / 2, z: sz * (d / 2 - inset), sx: size, sy: top, sz: size, shade: 0.7 })));
-  switch (kind) {
-    case "sofa":
-    case "armchair": {
-      const seatH = h * 0.5;
-      const back = d * 0.22;
-      const arm = Math.min(w * 0.12, 180);
-      return [
-        { x: 0, y: seatH / 2, z: back / 2, sx: w - 2 * arm, sy: seatH, sz: d - back },
-        { x: 0, y: h / 2, z: -d / 2 + back / 2, sx: w, sy: h, sz: back, shade: 0.85 },
-        { x: -w / 2 + arm / 2, y: (h * 0.72) / 2, z: back / 2, sx: arm, sy: h * 0.72, sz: d - back, shade: 0.9 },
-        { x: w / 2 - arm / 2, y: (h * 0.72) / 2, z: back / 2, sx: arm, sy: h * 0.72, sz: d - back, shade: 0.9 },
-      ];
-    }
-    case "bed": {
-      const base = h * 0.6;
-      return [
-        { x: 0, y: base / 2, z: 0, sx: w, sy: base, sz: d, shade: 0.8 },
-        { x: 0, y: base + (h - base) / 2, z: 0.03 * d, sx: w * 0.98, sy: h - base, sz: d * 0.94 },
-        { x: 0, y: (h + 450) / 2, z: -d / 2 + 40, sx: w, sy: h + 450, sz: 80, shade: 0.7 },
-      ];
-    }
-    case "dining-table":
-    case "coffee-table":
-    case "desk": {
-      const top = Math.min(40, h * 0.1);
-      return [{ x: 0, y: h - top / 2, z: 0, sx: w, sy: top, sz: d }, ...legs(h - top, 50, 50)];
-    }
-    case "chair": {
-      const seat = h * 0.5;
-      return [
-        { x: 0, y: seat - 20, z: 0, sx: w, sy: 40, sz: d },
-        { x: 0, y: seat + (h - seat) / 2, z: -d / 2 + 20, sx: w, sy: h - seat, sz: 40, shade: 0.85 },
-        ...legs(seat - 40, 30, 35),
-      ];
-    }
-    default:
-      return [{ x: 0, y: h / 2, z: 0, sx: w, sy: h, sz: d }];
-  }
 }
 
 export function buildScene(floor: Floor, materials: readonly Material[]): Scene3D {
@@ -178,7 +122,7 @@ export function buildScene(floor: Floor, materials: readonly Material[]): Scene3
         center: [px * MM, (f.elevation + part.y) * MM, pz * MM],
         size: [part.sx * MM, part.sy * MM, part.sz * MM],
         rotationY: -theta,
-        color: part.shade ? shadeHex(base, part.shade) : base,
+        color: part.shade ? shadeHex(part.color ?? base, part.shade) : (part.color ?? base),
         kind: "furniture",
         sourceId: f.id,
       });

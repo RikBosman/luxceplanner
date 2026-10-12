@@ -1,5 +1,12 @@
 import { expect, test, type Page } from "@playwright/test";
+import { getCatalogItem } from "../../src/domain/project/catalog";
+import { furnitureParts } from "../../src/domain/project/furniture-parts";
 import { hasStack, isLocal, registerAndConfirm, uniqueEmail } from "./helpers";
+
+const partCount = (catalogId: string) => {
+  const c = getCatalogItem(catalogId)!;
+  return furnitureParts(c.kind, c.width, c.depth, c.height).length;
+};
 
 async function newProject(page: Page, name = "Editor test") {
   if (isLocal()) await page.goto("/app");
@@ -165,7 +172,7 @@ test.describe("2D-editor en 3D", () => {
     await expect(view).toBeVisible();
     await expect(view.locator("canvas")).toBeVisible();
     const boxesBefore = Number(await view.getAttribute("data-boxes"));
-    expect(boxesBefore).toBe(4 + 3); // 4 muren + bed (onderstel, matras, hoofdbord)
+    expect(boxesBefore).toBe(4 + partCount("bed-double")); // 4 muren + alle onderdelen van het bed
 
     await page.getByRole("button", { name: /Muren: kleur #dfe6d6/ }).click();
     await expect(page.getByRole("button", { name: /Muren: kleur #dfe6d6/ })).toHaveAttribute("aria-pressed", "true");
@@ -174,7 +181,7 @@ test.describe("2D-editor en 3D", () => {
     await page.getByRole("button", { name: "2D", exact: true }).click();
     await page.getByRole("button", { name: "Bureau" }).click();
     await page.getByRole("button", { name: "3D", exact: true }).click();
-    await expect(page.getByTestId("view-3d")).toHaveAttribute("data-boxes", String(boxesBefore + 5)); // bureau: blad + 4 poten
+    await expect(page.getByTestId("view-3d")).toHaveAttribute("data-boxes", String(boxesBefore + partCount("desk")));
     await saved(page);
   });
 });
