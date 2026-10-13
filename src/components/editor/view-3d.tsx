@@ -1,11 +1,12 @@
 "use client";
 
 import { Canvas, useThree } from "@react-three/fiber";
-import { Component, useEffect, useMemo, useState, type ReactNode } from "react";
+import { Component, useCallback, useEffect, useMemo, useRef, useState, type ReactNode } from "react";
 import * as THREE from "three";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls.js";
 import { buildScene, setFloorColor, setWallColor, type Scene3D } from "@/domain/project";
 import { RoomMeshes, StudioLighting } from "@/components/three/room-meshes";
+import { AiRenderDialog } from "./ai-render-dialog";
 import { PhotoDialog } from "./photo-dialog";
 import type { EditorApi } from "./use-editor-state";
 
@@ -40,13 +41,18 @@ class SceneErrorBoundary extends Component<{ children: ReactNode }, { failed: bo
   }
 }
 
-export function View3D({ editor, projectName = "ontwerp" }: { editor: EditorApi; projectName?: string }) {
+export function View3D({ editor, projectId, projectName = "ontwerp" }: { editor: EditorApi; projectId?: string; projectName?: string }) {
   const doc = editor.committed;
   const floor = doc.floors[0]!;
   const scene = useMemo(() => buildScene(floor, doc.materials), [floor, doc.materials]);
   const [preset, setPreset] = useState<{ name: ViewPreset; n: number }>({ name: "schuin", n: 0 });
   const [cutaway, setCutaway] = useState(true);
   const [photoOpen, setPhotoOpen] = useState(false);
+  const [aiInput, setAiInput] = useState<string | null>(null);
+  const glRef = useRef<THREE.WebGLRenderer | null>(null);
+  const setGl = useCallback((gl: THREE.WebGLRenderer) => {
+    glRef.current = gl;
+  }, []);
   const [supported] = useState(() => (typeof document === "undefined" ? true : webglAvailable()));
 
   if (!supported) {
@@ -68,6 +74,7 @@ export function View3D({ editor, projectName = "ontwerp" }: { editor: EditorApi;
       <SceneErrorBoundary>
         <Canvas shadows frameloop="demand" dpr={[1, 2]} scene={{ environmentIntensity: 0.35 }} camera={{ fov: 45, near: 0.05, far: 500 }} gl={{ antialias: true, preserveDrawingBuffer: true }}>
           <color attach="background" args={["#f4f1ec"]} />
+          <GlGrabber onGl={setGl} />
           <StudioLighting scene={scene} />
           <RoomMeshes scene={scene} cutaway={cutaway} />
           <Controls scene={scene} preset={preset} />
@@ -87,6 +94,18 @@ export function View3D({ editor, projectName = "ontwerp" }: { editor: EditorApi;
         <button type="button" onClick={() => setPhotoOpen(true)} className="ml-1 rounded-md bg-gold-400 px-3 py-1 text-xs font-medium text-ink-950 hover:bg-gold-300">
           ✦ Fotorealistische render
         </button>
+        {projectId && (
+          <button
+            type="button"
+            onClick={() => {
+              const shot = glRef.current?.domElement.toDataURL("image/jpeg", 0.9);
+              if (shot) setAiInput(shot);
+            }}
+            className="rounded-md bg-ink-950 px-3 py-1 text-xs font-medium text-gold-200 hover:bg-ink-800"
+          >
+            ✦ AI-render
+          </button>
+        )}
       </div>
 
       <div className="absolute right-3 top-3 w-56 space-y-3 rounded-xl bg-white/95 p-3 text-xs shadow-sm">
@@ -100,6 +119,7 @@ export function View3D({ editor, projectName = "ontwerp" }: { editor: EditorApi;
         </div>
       )}
       {photoOpen && <PhotoDialog doc={doc} projectName={projectName} onClose={() => setPhotoOpen(false)} />}
+      {aiInput && projectId && <AiRenderDialog projectId={projectId} projectName={projectName} input={aiInput} onClose={() => setAiInput(null)} />}
       <p className="pointer-events-none absolute bottom-3 left-1/2 -translate-x-1/2 rounded-lg bg-white/90 px-3 py-1.5 text-xs text-sand-700 shadow-sm">
         Sleep om te draaien · scroll om te zoomen · rechtermuisknop om te verschuiven. Bewerken doe je in 2D.
       </p>
@@ -173,5 +193,12 @@ function Controls({ scene, preset }: { scene: Scene3D; preset: { name: ViewPrese
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [preset, controls]);
 
+  return null;
+}
+
+/** Geeft de WebGL-renderer door, zodat de huidige weergave als afbeelding kan worden vastgelegd. */
+function GlGrabber({ onGl }: { onGl: (gl: THREE.WebGLRenderer) => void }) {
+  const gl = useThree((s) => s.gl);
+  useEffect(() => onGl(gl), [gl, onGl]);
   return null;
 }

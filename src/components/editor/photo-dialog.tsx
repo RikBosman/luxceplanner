@@ -4,6 +4,7 @@ import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { buildScene, type ProjectDocument } from "@/domain/project";
 import { PhotoRender } from "@/components/three/photo-render";
 import { defaultEyeCamera } from "@/lib/three/eye-camera";
+import { downloadFile, safeFileName } from "@/lib/download";
 
 const QUALITY = [
   { id: "concept", label: "Concept", samples: 64, hint: "Snel, nog wat korrelig" },
@@ -38,10 +39,7 @@ export function PhotoDialog({ doc, projectName, onClose }: { doc: ProjectDocumen
 
   const download = () => {
     if (!image) return;
-    const a = document.createElement("a");
-    a.href = image.toDataURL("image/jpeg", 0.93);
-    a.download = `${projectName.replace(/[^\p{L}\p{N} _-]/gu, "").trim() || "ontwerp"} — render.jpg`;
-    a.click();
+    downloadFile(`${safeFileName(projectName)} - render.jpg`, image.toDataURL("image/jpeg", 0.93));
   };
 
   return (

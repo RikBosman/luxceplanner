@@ -30,6 +30,7 @@ export const FEATURE_GROUPS: readonly { title: string; items: readonly { name: s
       { name: "Interactief 3D-model", text: "Muren, vloer, deuren, ramen en meubels ruimtelijk bekijken en eromheen draaien.", status: "beschikbaar" },
       { name: "Kleuren en materialen", text: "Kies een kleur voor muren en vloeren; meubels hebben een eigen standaardkleur.", status: "beschikbaar" },
       { name: "Fotorealistische render", text: "Een foto-echt beeld op ooghoogte met daglicht, zachte schaduwen en weerkaatsend licht (path tracing), te downloaden als afbeelding.", status: "beschikbaar" },
+      { name: "AI-render", text: "Een AI maakt in enkele seconden een foto-echte impressie van je 3D-weergave, in een stijl naar keuze. Indeling blijft; details kunnen afwijken.", status: "beschikbaar" },
       { name: "Realistische 3D-modellen", text: "Een eerste set echte 3D-modellen (velours bank, loungestoel, plant, vaas met bloemen); de bibliotheek wordt uitgebreid.", status: "in-ontwikkeling" },
       { name: "Rondwandelen in 3D", text: "Voor een latere fase.", status: "gepland" },
       { name: "Ontwerpen op telefoon en tablet", text: "Bekijken werkt; tekenen is nu bedoeld voor laptop en desktop.", status: "in-ontwikkeling" },

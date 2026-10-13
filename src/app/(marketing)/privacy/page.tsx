@@ -37,6 +37,9 @@ export default function PrivacyPage() {
         <Section title="Met wie we gegevens delen">
           <p>We gebruiken Supabase voor database en authenticatie en een hostingpartij voor de website. Met deze verwerkers sluiten we verwerkersovereenkomsten. We kiezen waar mogelijk voor opslag binnen de Europese Unie. [Concept: definitieve verwerkers en locaties invullen.]</p>
         </Section>
+        <Section title="AI-renders">
+          <p>Als je zelf op “AI-render” klikt, sturen we een afbeelding van je 3D-weergave en een beschrijving van je ontwerp (afmetingen, meubels, kleuren en je eventuele wens) naar Google (Gemini API) om een foto-echte impressie te maken. We sturen geen naam of e-mailadres mee. Het resultaat slaan we niet op; je kunt het zelf downloaden. [Concept: verwerkersovereenkomst en datalocatie van Google controleren; gebruik het betaalde niveau van de API.]</p>
+        </Section>
         <Section title="Hoe lang we gegevens bewaren">
           <p>Zolang je account bestaat. Verwijder je je account, dan verwijderen we je account en al je ontwerpen direct uit de database. Back-ups worden na maximaal [concept: termijn invullen] dagen overschreven.</p>
         </Section>

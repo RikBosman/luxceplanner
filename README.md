@@ -44,6 +44,19 @@ Eén product, twee gescheiden onderdelen:
   Instelbaar met `RENDER_WIDTH`, `RENDER_HEIGHT` en `RENDER_SAMPLES` (standaard 1600 × 1000, 512 samples).
 - Realistische 3D-modellen staan in `public/models/` (glTF, opgeschoond en verkleind). Herkomst en licenties (CC0 / CC-BY 4.0) staan in `MODEL_CREDITS` in `src/domain/project/catalog.ts` en op de pagina `/licenties`. Een model toevoegen: zet het `.glb`-bestand in `public/models/` en voeg een catalogusitem met `model` toe; de standaardmaten moeten de maten van het model zijn. Zonder (werkend) model valt de app terug op de eigen parametrische vorm.
 
+## AI-render (foto-echte impressie)
+
+In de 3D-weergave maakt **✦ AI-render** binnen enkele seconden een foto-echt beeld van de huidige 3D-weergave. De server stuurt de momentopname plus een beschrijving uit het opgeslagen ontwerp (afmetingen, meubels, kleuren, gekozen stijl) naar Google Gemini ("Nano Banana") met de opdracht de indeling exact te behouden. Het resultaat is een **impressie**: details en maten kunnen afwijken (dat staat ook in de app).
+
+Instellen:
+1. Maak een API-sleutel aan op <https://aistudio.google.com/apikey>.
+2. Zet in `.env.local`: `GEMINI_API_KEY=...` en herstart `pnpm dev`.
+3. Voor commercieel gebruik: koppel een betaalaccount (betaald niveau). Op het gratis niveau kan Google ingestuurde gegevens gebruiken om zijn diensten te verbeteren; op het betaalde niveau niet. Controleer de actuele voorwaarden en prijzen van Google (indicatief enkele centen per beeld).
+
+Kostenbewaking: maximaal `AI_RENDER_DAILY_LIMIT` (standaard 20) AI-renders per gebruiker per dag. De telling staat in het geheugen van de server; bij meerdere serverinstanties of voor koppeling aan abonnementen hoort die in de database (gepland). Alleen eigen ontwerpen kunnen worden gerenderd; de sleutel blijft op de server.
+
+Zonder sleutel werkt de rest van de app gewoon; de knop meldt dan dat AI-renders niet zijn ingesteld. Voor tests: `AI_RENDER_PROVIDER=mock` (alleen lokaal of tijdens ontwikkeling) geeft het invoerbeeld terug zonder AI.
+
 ## Techniek
 
 Next.js 16 (App Router) · React 19 · TypeScript (strict) · Tailwind CSS 4 · Supabase (PostgreSQL + Auth) · Zod · eigen SVG-editor · Three.js via React Three Fiber · Vitest · Playwright · pnpm.

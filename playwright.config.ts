@@ -38,7 +38,7 @@ export default defineConfig({
     reuseExistingServer: false,
     env: {
       ...stackEnv,
-      ...(localMode ? { RUIMTE_MODE: "local", RUIMTE_DATA_DIR: `.data/e2e-${Date.now()}` } : {}),
+      ...(localMode ? { RUIMTE_MODE: "local", RUIMTE_DATA_DIR: `.data/e2e-${Date.now()}`, AI_RENDER_PROVIDER: "mock", AI_RENDER_DAILY_LIMIT: "5" } : {}),
       NEXT_PUBLIC_SITE_URL: `http://localhost:${PORT}`,
     },
   },
